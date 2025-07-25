@@ -1,5 +1,12 @@
+import MentorLayout from "@/modules/mentor/layouts/MentorLayout.tsx";
+
 export default function ProductList() {
     return (
-        <div>Product list</div>
+        <MentorLayout
+            pageTitle={'E-Course'}
+            menuActive={'course'}
+        >
+
+        </MentorLayout>
     )
 }

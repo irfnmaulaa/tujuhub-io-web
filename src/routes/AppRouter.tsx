@@ -6,6 +6,8 @@ import ProductList from "@/modules/product/pages/ProductList.tsx";
 import LoginPage from "@/modules/auth/pages/LoginPage.tsx";
 import MentorArea from "@/shared/pages/areas/MentorArea.tsx";
 import GuestArea from "@/shared/pages/areas/GuestArea.tsx";
+import BusinessArea from "@/shared/pages/areas/BusinessArea.tsx";
+import SelectBusiness from "@/shared/pages/SelectBusiness.tsx";
 
 const routes = [
     {
@@ -14,12 +16,22 @@ const routes = [
         children: [
             {
                 path: '',
-                element: <Home/>
+                element: <SelectBusiness/>
             },
             {
-                path: 'products',
-                element: <ProductList/>
-            }
+                path: ':businessId',
+                element: <BusinessArea/>,
+                children: [
+                    {
+                        path: '',
+                        element: <Home/>
+                    },
+                    {
+                        path: 'courses',
+                        element: <ProductList/>
+                    }
+                ]
+            },
         ]
     },
     {

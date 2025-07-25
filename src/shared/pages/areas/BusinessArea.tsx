@@ -1,16 +1,10 @@
-import {Navigate, Outlet} from "react-router-dom";
-import useProfile from "@/modules/profile/api/useProfile.ts";
-import SuspenseFallback from "@/shared/pages/fallbacks/SuspenseFallback.tsx";
+import {Outlet, useParams} from "react-router-dom";
 
-export default function MentorArea() {
-    const profile = useProfile()
+export default function BusinessArea() {
+    const {businessId} = useParams()
 
-    if(profile.isLoading) {
-        return <SuspenseFallback/>
-    }
-
-    if(profile.isError) {
-        return <Navigate to={'/sign-in'}/>
+    if(!businessId) {
+        return <div>Not found</div>
     }
 
     return (<Outlet/>)

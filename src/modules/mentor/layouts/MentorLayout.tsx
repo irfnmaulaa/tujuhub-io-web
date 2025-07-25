@@ -14,27 +14,29 @@ import {
     TbBox,
     TbChevronDown,
     TbChevronRight,
-    TbHome,
     TbLogout,
     TbMenu2, TbMoon,
-    TbSchool, TbSun,
+    TbSun,
     TbUserCircle
 } from "react-icons/tb";
 import {NavLink, useNavigate} from "react-router-dom";
 import useProfile from "@/modules/profile/api/useProfile.ts";
-import {type Key, type PropsWithChildren, useEffect, useRef, useState} from "react";
+import {Fragment, type Key, type PropsWithChildren, useEffect, useRef, useState} from "react";
 import usePersonalInfo from "@/modules/profile/hooks/usePersonalInfo.tsx";
 import {useLogout} from "@/modules/auth/api/useLogout.ts";
 import {toastSuccess} from "@/shared/utils/toast.ts";
 import useTheme from "@/shared/hooks/useTheme.ts";
+import useMenus, {type MenuKeys} from "@/shared/hooks/useMenus.tsx";
 
-export default function MentorLayout({ children, pageTitle }: PropsWithChildren & {
+export default function MentorLayout({ children, pageTitle, menuActive }: PropsWithChildren & {
     pageTitle: string;
+    menuActive: MenuKeys
 }) {
 
     // define hooks
     const personalInfo = usePersonalInfo()
     const navigate = useNavigate()
+    const { menus } = useMenus()
 
     // define queries
     const profile = useProfile()
@@ -186,51 +188,90 @@ export default function MentorLayout({ children, pageTitle }: PropsWithChildren 
                             </PopoverContent>
                         </Popover>
 
-                        <div>
-                            <input type="checkbox" id={`sidebar-menu-1`}
-                                   className="sidebar-menu-checkbox hidden"
-                            />
-                            <label
-                                htmlFor={`sidebar-menu-1`}
-                                className={cn(
-                                    'w-full cursor-pointer grid select-none gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
-                                    'bg-default-100 text-default-800 font-bold ',
-                                    'grid-cols-[1fr_auto]'
-                                )}
-                            >
-                                <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
-                                    <div
-                                        className="w-full aspect-[1/1] flex items-center justify-center">
-                                        <TbHome className={'size-6'}/>
-                                    </div>
+                        { menus.map((menu, i) => (
+                            <Fragment key={i}>
+                                { menu.children ? (
+                                    <div key={menu.path}>
+                                        <input type="checkbox" id={`sidebar-menu-${i}`}
+                                               className="sidebar-menu-checkbox hidden"
+                                               defaultChecked={Boolean(menu.children.find(menu => menu.menuActive === menuActive))}
+                                        />
+                                        <label
+                                            htmlFor={`sidebar-menu-${i}`}
+                                            className={cn(
+                                                'w-full cursor-pointer grid select-none gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                                menu.children.find(menu => menu.menuActive === menuActive) && 'bg-default-100 text-default-800 font-bold',
+                                                'grid-cols-[1fr_auto]'
+                                            )}
+                                        >
+                                            <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
+                                                <div
+                                                    className="w-full aspect-[1/1] flex items-center justify-center">
+                                                    {menu.children.find(menu => menu.menuActive === menuActive) ? (
+                                                        <>{menu.iconOnActive}</>
+                                                    ) : (
+                                                        <>{menu.iconOnInactive}</>
+                                                    )}
+                                                </div>
 
-                                    Home
-                                </div>
-                                <div>
-                                    <TbChevronRight
-                                        className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
-                                </div>
-                            </label>
+                                                {menu.label}
+                                            </div>
+                                            <div>
+                                                <TbChevronRight
+                                                    className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
+                                            </div>
+                                        </label>
 
-                            <div className="sidebar-sub-menu">
-                                <div className={cn('overflow-hidden ms-6 border-l border-default-200')}>
-                                    <NavLink
-                                        to={'/'}
-                                        className={cn(
-                                            'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
-                                            'text-default-800 font-semibold'
-                                        )}
-                                    >
-                                        <div
-                                            className="w-full aspect-[1/1] flex items-center justify-center">
-                                            <TbSchool className={'size-6'}/>
+                                        <div className="sidebar-sub-menu">
+                                            <div className={cn('overflow-hidden ms-6 border-l border-default-200')}>
+                                                { menu.children.map((menu) => (
+                                                    <NavLink
+                                                        key={menu.path}
+                                                        to={menu.path}
+                                                        className={cn(
+                                                            'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                                            menu.menuActive === menuActive && 'text-default-800 font-semibold'
+                                                        )}
+                                                    >
+                                                        <div
+                                                            className="w-full aspect-[1/1] flex items-center justify-center">
+                                                            {menu.menuActive === menuActive ? (
+                                                                <>{menu.iconOnActive}</>
+                                                            ) : (
+                                                                <>{menu.iconOnInactive}</>
+                                                            )}
+                                                        </div>
+
+                                                        {menu.label}
+                                                    </NavLink>
+                                                )) }
+                                            </div>
                                         </div>
+                                    </div>
+                                ) : (
+                                    <div key={menu.path}>
+                                        <NavLink
+                                            to={menu.path}
+                                            className={cn(
+                                                'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                                menu.menuActive === menuActive && 'bg-default-100 text-default-800 font-bold'
+                                            )}
+                                        >
+                                            <div
+                                                className="w-full aspect-[1/1] flex items-center justify-center">
+                                                {menu.menuActive === menuActive ? (
+                                                    <>{menu.iconOnActive}</>
+                                                ) : (
+                                                    <>{menu.iconOnInactive}</>
+                                                )}
+                                            </div>
 
-                                        Products
-                                    </NavLink>
-                                </div>
-                            </div>
-                        </div>
+                                            {menu.label}
+                                        </NavLink>
+                                    </div>
+                                ) }
+                            </Fragment>
+                        )) }
 
                     </div>
 
