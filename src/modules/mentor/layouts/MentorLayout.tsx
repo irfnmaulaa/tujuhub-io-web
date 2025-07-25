@@ -132,7 +132,7 @@ export default function MentorLayout({ children, pageTitle }: PropsWithChildren 
 
             <div
                 className={cn(
-                    'w-[100vw] h-[calc(100vh_-_65px)] grid',
+                    'w-[100vw] h-[calc(100vh_-_65px)] grid overflow-visible',
                 )}
                 style={{
                     gridTemplateColumns: `${isCollapsed ? '80px' : '280px'} 1fr`,
@@ -161,12 +161,7 @@ export default function MentorLayout({ children, pageTitle }: PropsWithChildren 
                                             <img src={'/img/logo-circle.png'} alt="business"/>
                                         </div>
 
-                                        {!isCollapsed ? 'Tujuhub' : (
-                                            <div
-                                                className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>
-                                                Tujuhub
-                                            </div>
-                                        )}
+                                        Tujuhub
                                     </div>
                                     <div>
                                         <TbChevronDown className="size-5"/>
@@ -191,7 +186,7 @@ export default function MentorLayout({ children, pageTitle }: PropsWithChildren 
                             </PopoverContent>
                         </Popover>
 
-                        <div className={cn(isCollapsed ? 'border rounded-lg my-1' : '')}>
+                        <div>
                             <input type="checkbox" id={`sidebar-menu-1`}
                                    className="sidebar-menu-checkbox hidden"
                             />
@@ -199,8 +194,8 @@ export default function MentorLayout({ children, pageTitle }: PropsWithChildren 
                                 htmlFor={`sidebar-menu-1`}
                                 className={cn(
                                     'w-full cursor-pointer grid select-none gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
-                                    'bg-default-100 text-default-800 font-bold',
-                                    isCollapsed ? 'grid-cols-1' : 'grid-cols-[1fr_auto]'
+                                    'bg-default-100 text-default-800 font-bold ',
+                                    'grid-cols-[1fr_auto]'
                                 )}
                             >
                                 <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
@@ -209,21 +204,16 @@ export default function MentorLayout({ children, pageTitle }: PropsWithChildren 
                                         <TbHome className={'size-6'}/>
                                     </div>
 
-                                    {!isCollapsed ? 'Home' : (
-                                        <div
-                                            className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'Home'}</div>
-                                    )}
+                                    Home
                                 </div>
-                                {!isCollapsed && (
-                                    <div>
-                                        <TbChevronRight
-                                            className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
-                                    </div>
-                                )}
+                                <div>
+                                    <TbChevronRight
+                                        className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
+                                </div>
                             </label>
 
                             <div className="sidebar-sub-menu">
-                                <div className={cn('overflow-hidden', isCollapsed ? '' : 'ms-6 border-l border-default-200')}>
+                                <div className={cn('overflow-hidden ms-6 border-l border-default-200')}>
                                     <NavLink
                                         to={'/'}
                                         className={cn(
@@ -236,66 +226,12 @@ export default function MentorLayout({ children, pageTitle }: PropsWithChildren 
                                             <TbSchool className={'size-6'}/>
                                         </div>
 
-                                        {!isCollapsed ? 'Products' : (
-                                            <div
-                                                className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'Products'}</div>
-                                        )}
+                                        Products
                                     </NavLink>
                                 </div>
                             </div>
                         </div>
 
-                        <div className={cn(isCollapsed ? 'border rounded-lg my-1' : '')}>
-                            <input type="checkbox" id={`sidebar-menu-2`}
-                                   className="sidebar-menu-checkbox hidden"
-                            />
-                            <label
-                                htmlFor={`sidebar-menu-2`}
-                                className={cn(
-                                    'w-full cursor-pointer grid select-none gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
-                                    isCollapsed ? 'grid-cols-1' : 'grid-cols-[1fr_auto]'
-                                )}
-                            >
-                                <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
-                                    <div
-                                        className="w-full aspect-[1/1] flex items-center justify-center">
-                                        <TbBox className={'size-6'}/>
-                                    </div>
-
-                                    {!isCollapsed ? 'Products' : (
-                                        <div
-                                            className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'Products'}</div>
-                                    )}
-                                </div>
-                                {!isCollapsed && (
-                                    <div>
-                                        <TbChevronRight
-                                            className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
-                                    </div>
-                                )}
-                            </label>
-
-                            <div className="sidebar-sub-menu">
-                                <div className={cn('overflow-hidden', isCollapsed ? '' : 'ms-6 border-l border-default-200')}>
-                                    <NavLink
-                                        to={'/'}
-                                        className={cn(
-                                            'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
-                                        )}
-                                    >
-                                        <div
-                                            className="w-full aspect-[1/1] flex items-center justify-center">
-                                            <TbSchool className={'size-6'}/>
-                                        </div>
-
-                                        {!isCollapsed ? 'E-Course' : (
-                                            <div
-                                                className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'E-Course'}</div>
-                                        )}
-                                    </NavLink>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div>
