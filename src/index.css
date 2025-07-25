@@ -1,0 +1,276 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Sora:wght@100..800&display=swap');
+
+@import "tailwindcss";
+
+* {
+    font-family: "Inter", serif;
+    font-optical-sizing: auto;
+}
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #ddd transparent;
+}
+body {
+    font-weight: normal;
+}
+.hide-scroll {
+    scrollbar-width: none;
+    scrollbar-color: transparent transparent;
+}
+.custom-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+.custom-scroll:hover {
+    scrollbar-color: #ddd transparent;
+}
+.hide-scroll:hover {
+    scrollbar-color: transparent transparent;
+}
+
+body::-webkit-scrollbar {
+    width: 0.3em;
+}
+
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+    @apply bg-gray-300;
+}
+
+.custom-scroll:not(.without-space) {
+    margin-left: 0.3em;
+}
+
+.custom-scroll::-webkit-scrollbar {
+    width: 0.3em;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+    @apply bg-transparent;
+    transition: .2s;
+}
+.custom-scroll:hover::-webkit-scrollbar-thumb {
+    @apply bg-gray-200;
+}
+
+.content-mode {
+    display: flex;
+    flex-direction: column;
+    @apply gap-6;
+}
+.content-mode a {
+    @apply text-blue-500;
+}
+.content-mode a:hover {
+    @apply underline;
+}
+.content-mode h1,
+.content-mode h2,
+.content-mode h3,
+.content-mode h4,
+.content-mode h5,
+.content-mode h6 {
+    @apply text-black;
+    font-weight: bold;
+}
+.content-mode h1 {
+    @apply text-3xl;
+}
+.content-mode h2 {
+    @apply text-2xl;
+}
+.content-mode h3 {
+    @apply text-xl;
+}
+.content-mode h4 {
+    @apply text-lg;
+}
+.content-mode p {
+    @apply leading-[1.5];
+}
+.content-mode ol, .content-mode ul {
+    @apply ps-5;
+}
+.content-mode a {
+    text-decoration: underline;
+}
+.content-mode ol {
+    list-style-type: decimal;
+}
+.content-mode ul {
+    list-style-type: disc;
+}
+.content-mode em, .content-mode i {
+    @apply italic;
+}
+
+.content-mode iframe, .content-mode img {
+    width: 100%;
+}
+.content-mode {
+    @apply text-gray-800;
+    line-height: 32px;
+}
+.content-mode strong, .content-mode b {
+    @apply text-gray-900;
+    @apply font-semibold;
+}
+.content-mode code {
+    @apply text-white;
+    @apply bg-gray-800;
+    @apply rounded inline-block p-4;
+    font-family: monospace;
+}
+.content-mode [data-youtube-video] {
+    @apply aspect-[16/9]
+}
+.content-mode [data-youtube-video] iframe {
+    height: 100%;
+}
+.content-mode .has-focus .content-media, .content-mode .has-focus.content-media {
+    @apply outline outline-[2px] outline-blue-500 rounded overflow-hidden;
+}
+.bald-editor .tox-tinymce {
+    border: 0;
+    border-radius: 0;
+}
+.start-course-info {
+    animation: infoAnimation 2s infinite ease-out;
+}
+@keyframes infoAnimation {
+    from {
+        margin-top: -12px;
+    }
+    40% {
+        margin-top: 2px;
+    }
+    to {
+        margin-top: -12px;
+    }
+}
+
+.animate-disappear {
+    animation: disappearAnimation 1s infinite linear;
+}
+@keyframes disappearAnimation {
+    50% {
+        opacity: 0.4;
+    }
+}
+
+.media-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+}
+.media-container iframe {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+.media-container video {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+@media (max-width: 720px) {
+    .content-mode h1 {
+        @apply text-xl;
+    }
+    .content-mode h2 {
+        @apply text-lg;
+    }
+    .content-mode h3 {
+        @apply text-[16px];
+    }
+    .content-mode p {
+        @apply leading-[1.5];
+        @apply text-[16px];
+    }
+}
+
+.content-type-icon-sm {
+    position: relative;
+    aspect-ratio: 1/1;
+}
+.content-type-icon-sm .content-type-icon-sm-bg {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(100% + 6px);
+    height: calc(100% + 6px);
+    transform: translate(-3px, -3px);
+    @apply rounded;
+}
+
+.tiptap .is-editor-empty:first-child::before {
+    @apply text-gray-400;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+.tiptap .is-empty::before {
+    @apply text-gray-400;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+.animate-infinity {
+    animation-iteration-count: infinite;
+}
+
+.react-pdf__Page__canvas {
+    margin: 0 auto;
+    width: 80% !important;
+    height: 100% !important;
+}
+.table-basic td, .table-basic th {
+    @apply border;
+    @apply text-left py-1.5 px-2;
+}
+
+.sidebar-menu-checkbox:checked ~ label .sidebar-icon {
+    @apply rotate-90;
+}
+.sidebar-menu-checkbox ~ .sidebar-sub-menu {
+    @apply grid grid-rows-[0fr] overflow-hidden transition-all duration-200 ease-in-out;
+}
+.sidebar-menu-checkbox:checked ~ .sidebar-sub-menu {
+    @apply grid grid-rows-[1fr] mb-3;
+}
+
+.dark .logo {
+    filter: brightness(0) invert(1);
+}
+
+@config "../tailwind.config.js"

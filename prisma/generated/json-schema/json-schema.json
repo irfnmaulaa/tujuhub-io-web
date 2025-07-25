@@ -1,0 +1,4536 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "country": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "location": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timeZone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "isActive": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "isOnline": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "lastOnlineAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "picture": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "verifiedEmail": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "authMethods": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AuthMethods"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "locale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "isSuperuser": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "totpSecret": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "totpUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "isTotpGenerated": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "firebaseClientIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isFake": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "businesses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Business"
+          }
+        },
+        "createdProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        },
+        "createdEvents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "createdCourses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Course"
+          }
+        },
+        "createdMemberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Membership"
+          }
+        },
+        "createdChatRooms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChatRoom"
+          }
+        },
+        "enrolledChatRooms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChatRoomUser"
+          }
+        },
+        "chats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Chat"
+          }
+        },
+        "posts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Post"
+          }
+        },
+        "postPoolingAnswers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostPoolingAnswer"
+          }
+        },
+        "postLikes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostLike"
+          }
+        },
+        "postComments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostComment"
+          }
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Notification"
+          }
+        },
+        "tokens": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Token"
+          }
+        },
+        "businessAdmins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessAdmin"
+          }
+        },
+        "membershipActivities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MembershipActivity"
+          }
+        },
+        "createdDiscounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Discount"
+          }
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserActivity"
+          }
+        },
+        "createdPricingDiscounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingDiscount"
+          }
+        },
+        "createdPricingAgencyFees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingAgencyFee"
+          }
+        },
+        "createdPricings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Pricing"
+          }
+        },
+        "createdLandingPages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPage"
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        },
+        "createdMessageTemplates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MessageTemplate"
+          }
+        },
+        "createdMetaPixels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetaPixel"
+          }
+        },
+        "createdAutomations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Automation"
+          }
+        },
+        "createdBusinessContacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessContact"
+          }
+        },
+        "createdBusinessWhatsapps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessWhatsapp"
+          }
+        }
+      }
+    },
+    "Business": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "logoSrc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "logoLongSrc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coverSrc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "isBanned": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "isDeleted": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "tier": {
+          "type": "string",
+          "default": "starter",
+          "enum": [
+            "starter",
+            "growth",
+            "pro",
+            "elite"
+          ]
+        },
+        "extraChargePolicy": {
+          "type": "string",
+          "default": "customer",
+          "enum": [
+            "customer",
+            "admin"
+          ]
+        },
+        "xenditAccount": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/XenditAccount"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        },
+        "courses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Course"
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Membership"
+          }
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Notification"
+          }
+        },
+        "admins": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessAdmin"
+          }
+        },
+        "discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Discount"
+          }
+        },
+        "pricings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Pricing"
+          }
+        },
+        "landingPages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPage"
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        },
+        "messageTemplates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MessageTemplate"
+          }
+        },
+        "automations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Automation"
+          }
+        },
+        "metaPixels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetaPixel"
+          }
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessContact"
+          }
+        },
+        "whatsapps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessWhatsapp"
+          }
+        }
+      }
+    },
+    "BusinessContact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "whatsappNumber",
+            "email",
+            "instagramUsername",
+            "facebookUrl"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "whatsapps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BusinessWhatsapp"
+          }
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "slug": {
+          "type": "string"
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "thumbnailSrc": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "productType": {
+          "type": "string",
+          "enum": [
+            "course",
+            "event",
+            "membership"
+          ]
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false
+        },
+        "automation": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Automation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "courses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Course"
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Membership"
+          }
+        },
+        "pricingBundles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingBundleProduct"
+          }
+        },
+        "transactionProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionProduct"
+          }
+        },
+        "Pricing": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Pricing"
+          }
+        },
+        "MembershipSubscription": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MembershipSubscription"
+          }
+        },
+        "automationExecutionLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AutomationExecutionLog"
+          }
+        }
+      }
+    },
+    "Course": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "isPublished": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Product"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lessons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Lesson"
+          }
+        },
+        "aiChats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AIChat"
+          }
+        }
+      }
+    },
+    "Lesson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "course": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Course"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "page",
+          "enum": [
+            "page",
+            "video",
+            "exam",
+            "link",
+            "documentPdf",
+            "embedToutube",
+            "embedGoogleDrive",
+            "embedSpotify"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "default": 0
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "byAi": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "media": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Media"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sectionName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "published",
+          "enum": [
+            "published",
+            "draft"
+          ]
+        },
+        "examQuestions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExamQuestion"
+          }
+        }
+      }
+    },
+    "ExamQuestion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "default": "multiple",
+          "enum": [
+            "multiple",
+            "fill_blank",
+            "reorder",
+            "match",
+            "dropdown",
+            "hotspot",
+            "categorize"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "media": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Media"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "estimationTimeMinute": {
+          "type": "integer",
+          "default": 1
+        },
+        "mark_as_point": {
+          "type": "integer",
+          "default": 1
+        },
+        "isRequired": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "order": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0
+        },
+        "byAi": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "multipleSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamQuestionMultipleSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "categorizeSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamQuestionCategorizeSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "matchSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamQuestionCategorizeSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lesson": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Lesson"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExamChoice"
+          }
+        }
+      }
+    },
+    "ExamChoice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "media": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Media"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "order": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "default": 0
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "multipleSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamChoiceMultipleSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "hotspotSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamChoiceHotspotSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reorderSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamChoiceReorderSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "categorizeSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamChoiceCaterorizeSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "matchSettings": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamChoiceCaterorizeSettings"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "examQuestion": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExamQuestion"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "EventSchedule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "event": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Event"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "description": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locationType": {
+          "type": "string",
+          "enum": [
+            "zoom",
+            "googleMeet",
+            "address",
+            "link"
+          ]
+        },
+        "locationLink": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "banner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false
+        },
+        "isPublished": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Product"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "schedules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventSchedule"
+          }
+        }
+      }
+    },
+    "Membership": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "isPublished": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "isDeleted": {
+          "type": "boolean",
+          "default": false
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Product"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "membershipActivities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MembershipActivity"
+          }
+        }
+      }
+    },
+    "ChatRoom": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "productType": {
+          "type": "string",
+          "enum": [
+            "course",
+            "event",
+            "membership"
+          ]
+        },
+        "productId": {
+          "type": "string"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "slug": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "no"
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "banner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "isDeleted": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "chats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Chat"
+          }
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChatRoomUser"
+          }
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ChatRoomUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "default": "member",
+          "enum": [
+            "admin",
+            "member"
+          ]
+        },
+        "room": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChatRoom"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "Chat": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "attachmentUrl": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Attachment"
+          }
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "text",
+          "enum": [
+            "image",
+            "video",
+            "file",
+            "text"
+          ]
+        },
+        "room": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ChatRoom"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "Post": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "caption": {
+          "type": "string"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Attachment"
+          }
+        },
+        "feelOrActivity": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FeelOrActivity"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "pooling": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Pooling"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "postTypeId": {
+          "type": "string"
+        },
+        "postType": {
+          "type": "string",
+          "default": "membership",
+          "enum": [
+            "course",
+            "lesson",
+            "event",
+            "membership"
+          ]
+        },
+        "isPinned": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        },
+        "likes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostLike"
+          }
+        },
+        "comments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostComment"
+          }
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "poolingAnswers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostPoolingAnswer"
+          }
+        }
+      }
+    },
+    "PostPoolingAnswer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "choice": {
+          "$ref": "#/definitions/PoolingChoice"
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Post"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "PostLike": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Post"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "PostComment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "post": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Post"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Attachment"
+          }
+        },
+        "isPinned": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "default": false
+        }
+      }
+    },
+    "Token": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "enum": [
+            "forgotPassword",
+            "requestPayout"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Notification": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "post",
+            "liked",
+            "comment",
+            "mentioned",
+            "chat",
+            "paymentPending",
+            "purchase",
+            "subscription",
+            "joinedMembership",
+            "gift",
+            "received",
+            "requestPayoutCreated",
+            "requestPayoutAccepted",
+            "requestPayoutDeclined"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationLink"
+          }
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "BusinessAdmin": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "role": {
+          "type": "string",
+          "default": "coAdmin",
+          "enum": [
+            "coAdmin"
+          ]
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "MembershipActivity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "membership": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Membership"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "featureId": {
+          "type": "string"
+        },
+        "feature": {
+          "type": "string",
+          "enum": [
+            "business",
+            "course",
+            "event",
+            "post",
+            "discount",
+            "payout",
+            "space",
+            "lesson",
+            "comment",
+            "like",
+            "invoice",
+            "purchase",
+            "subscribe",
+            "joinMembership",
+            "courseProgress",
+            "member",
+            "gift",
+            "memberField",
+            "chat",
+            "learningPath",
+            "learningPathLevel",
+            "learningPathContent",
+            "tag",
+            "socialFeed",
+            "article",
+            "chatRoom",
+            "link",
+            "digitalProduct",
+            "announcement",
+            "coaching",
+            "challenge",
+            "contentTag",
+            "eventSchedule",
+            "poolingAnswer"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "create",
+            "update",
+            "delete",
+            "find",
+            "findMany"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "UserActivity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "user": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "modelName": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "AIChat": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "course"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "momorySummary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "course": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Course"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AIChatMessage"
+          }
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "AIChatMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "default": "user",
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "content": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "contentJson": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "askFor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "generateLessons",
+            "generateQuizQuestions",
+            "generateLessonContent"
+          ]
+        },
+        "keyword": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "relatedId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "aiChat": {
+          "$ref": "#/definitions/AIChat"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "Discount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "percentage",
+            "fixed"
+          ]
+        },
+        "fixedValue": {
+          "type": "integer"
+        },
+        "percentageValue": {
+          "type": "integer"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": false
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "PricingDiscount": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingDiscount"
+          }
+        }
+      }
+    },
+    "Pricing": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "individual",
+            "bundle"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "currency": {
+          "type": "string",
+          "default": "IDR"
+        },
+        "price": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Product"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "business": {
+          "$ref": "#/definitions/Business"
+        },
+        "landingPagePricings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPagePricing"
+          }
+        },
+        "transactionPricings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionPricing"
+          }
+        },
+        "pricingDiscounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingDiscount"
+          }
+        },
+        "pricingAgencyFees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingAgencyFee"
+          }
+        },
+        "bundleProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingBundleProduct"
+          }
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "PricingBundleProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "product": {
+          "$ref": "#/definitions/Product"
+        },
+        "pricing": {
+          "$ref": "#/definitions/Pricing"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "LandingPage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "default": "default",
+          "enum": [
+            "default",
+            "home"
+          ]
+        },
+        "automation": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Automation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPageComponent"
+          }
+        },
+        "landingPagePricings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPagePricing"
+          }
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "business": {
+          "$ref": "#/definitions/Business"
+        }
+      }
+    },
+    "LandingPageComponent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "landingPage": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "content": {
+          "$ref": "#/definitions/LandingPageComponentContent"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "LandingPagePricing": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "pricing": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Pricing"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "landingPage": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "PricingDiscount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "pricing": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Pricing"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "discount": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Discount"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "PricingAgencyFee": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "pricing": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Pricing"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "percentage",
+            "fixed"
+          ]
+        },
+        "fixedValue": {
+          "type": "integer"
+        },
+        "percentageValue": {
+          "type": "integer"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": false
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Transaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "default": "pending",
+          "enum": [
+            "pending",
+            "completed",
+            "expired"
+          ]
+        },
+        "currency": {
+          "type": "string"
+        },
+        "grossAmount": {
+          "type": "integer"
+        },
+        "totalExtraCharges": {
+          "type": "integer",
+          "default": 0
+        },
+        "totalAgencyFee": {
+          "type": "integer",
+          "default": 0
+        },
+        "totalDiscountsApplied": {
+          "type": "integer",
+          "default": 0
+        },
+        "payableAmount": {
+          "type": "integer"
+        },
+        "finalAmount": {
+          "type": "integer"
+        },
+        "automation": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Automation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "amountDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionDetail"
+          }
+        },
+        "agencyFeeDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionDetail"
+          }
+        },
+        "extraChargeDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionDetail"
+          }
+        },
+        "discountDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionDetail"
+          }
+        },
+        "isWithdrawn": {
+          "type": "boolean",
+          "default": false
+        },
+        "provider": {
+          "type": "string",
+          "default": "xendit",
+          "enum": [
+            "manual",
+            "xendit",
+            "flip"
+          ]
+        },
+        "providerXenditInvoice": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/XenditInvoice"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "providerXenditPayoutId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "providerXenditWebhook": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/XenditWebhook"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "landingPage": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transactionProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionProduct"
+          }
+        },
+        "transactionPricings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TransactionPricing"
+          }
+        },
+        "membershipSubscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MembershipSubscription"
+          }
+        },
+        "extraChargePolicy": {
+          "type": "string",
+          "default": "customer",
+          "enum": [
+            "customer",
+            "admin"
+          ]
+        },
+        "business": {
+          "$ref": "#/definitions/Business"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Message"
+          }
+        },
+        "automationExecutionLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AutomationExecutionLog"
+          }
+        }
+      }
+    },
+    "TransactionPricing": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "default": 1
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "pricing": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Pricing"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transaction": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Transaction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "TransactionProduct": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "productTitle": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Product"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transaction": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Transaction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "MembershipSubscription": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "productTitle": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "startAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "expiredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Product"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transaction": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Transaction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "MessageTemplate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "whatsapp",
+            "email"
+          ]
+        },
+        "messageFor": {
+          "type": "string",
+          "default": "transaction",
+          "enum": [
+            "transaction",
+            "productEvent",
+            "productCourse",
+            "productMembership"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "whatsapp",
+            "email"
+          ]
+        },
+        "whatsappProvider": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "wablas",
+            "woowa"
+          ]
+        },
+        "messageFor": {
+          "type": "string",
+          "default": "transaction",
+          "enum": [
+            "transaction",
+            "productEvent",
+            "productCourse",
+            "productMembership"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "transaction": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Transaction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "MetaPixel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "pixelId": {
+          "type": "string"
+        },
+        "conversionApiId": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "BusinessWhatsapp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "wablas",
+            "woowa"
+          ]
+        },
+        "config": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "contact": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/BusinessContact"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Automation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "transaction",
+            "productEvent"
+          ]
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "business": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Business"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AutomationAction"
+          }
+        },
+        "creator": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/User"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transactions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        },
+        "landingPages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPage"
+          }
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        }
+      }
+    },
+    "AutomationAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "triggerEvent": {
+          "type": "string",
+          "enum": [
+            "invoiceCreated",
+            "invoiceExpired",
+            "invoiceCompleted",
+            "eventStart"
+          ]
+        },
+        "actionType": {
+          "type": "string",
+          "enum": [
+            "sendWhatsapp",
+            "sendEmail",
+            "sendMetaPixelEvent"
+          ]
+        },
+        "actionPayload": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "condition": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        },
+        "timeUnit": {
+          "type": "string",
+          "enum": [
+            "minute",
+            "hour",
+            "day",
+            "month",
+            "year"
+          ]
+        },
+        "timeValue": {
+          "type": "integer"
+        },
+        "timeDirection": {
+          "type": "string",
+          "enum": [
+            "before",
+            "after"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "automation": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Automation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "automationExecutionLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AutomationExecutionLog"
+          }
+        }
+      }
+    },
+    "AutomationExecutionLog": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "automationType": {
+          "type": "string",
+          "enum": [
+            "transaction",
+            "productEvent"
+          ]
+        },
+        "automationAction": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AutomationAction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "type": "string",
+          "default": "success",
+          "enum": [
+            "success",
+            "failed"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "createdAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "transaction": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Transaction"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "product": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Product"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "Attachment": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video",
+            "link",
+            "file",
+            "documentPdf"
+          ]
+        },
+        "mimeType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "AuthApp": {
+      "type": "object",
+      "properties": {
+        "passwordHash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "AuthMethods": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AuthApp"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "google": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        }
+      }
+    },
+    "Media": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video",
+            "audio",
+            "youtube",
+            "googleDrive",
+            "loom",
+            "spotify",
+            "documentPdf"
+          ]
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "ExamQuestionCategory": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "media": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Media"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ExamQuestionMultipleSettings": {
+      "type": "object",
+      "properties": {
+        "isMultipleAnswer": {
+          "type": "boolean",
+          "default": true
+        },
+        "isAnswerWithImage": {
+          "type": "boolean",
+          "default": false
+        },
+        "isRandomizedOrder": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "ExamQuestionCategorizeSettings": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExamQuestionCategory"
+          }
+        }
+      }
+    },
+    "ExamChoiceMultipleSettings": {
+      "type": "object",
+      "properties": {
+        "isCorrect": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "ExamChoiceHotspotSettings": {
+      "type": "object",
+      "properties": {
+        "isCorrect": {
+          "type": "boolean",
+          "default": false
+        },
+        "x": {
+          "type": "integer"
+        },
+        "y": {
+          "type": "integer"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        }
+      }
+    },
+    "ExamChoiceReorderSettings": {
+      "type": "object",
+      "properties": {
+        "order": {
+          "type": "integer",
+          "default": 0
+        }
+      }
+    },
+    "ExamChoiceCaterorizeSettings": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string"
+        }
+      }
+    },
+    "FeelOrActivity": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "Pooling": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "default": "singleAnswer",
+          "enum": [
+            "singleAnswer",
+            "multipleAnswer"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "choices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PoolingChoice"
+          }
+        }
+      }
+    },
+    "PoolingChoice": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        }
+      }
+    },
+    "NotificationLink": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "external",
+            "internal"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "LandingPageComponentContent": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "image",
+            "carousel",
+            "flexbox",
+            "testimonial",
+            "faq",
+            "button",
+            "embedYoutube",
+            "divider",
+            "sticky",
+            "section"
+          ]
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentText"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "image": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentImage"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "carousel": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentCarousel"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "flexbox": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentFlexBox"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "testimonial": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentTestimonial"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "faq": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentFaq"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "button": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentButton"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "embedYoutube": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentEmbedYouTube"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "divider": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentDivider"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "section": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/LandingPageComponentSection"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "LandingPageComponentEditor": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        }
+      }
+    },
+    "LandingPageComponentText": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        }
+      }
+    },
+    "LandingPageComponentImage": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "width": {
+          "type": "string"
+        },
+        "height": {
+          "type": "string"
+        },
+        "alt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "LandingPageComponentCarousel": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPageComponentImage"
+          }
+        }
+      }
+    },
+    "LandingPageComponentFlexBox": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPageComponentEditor"
+          }
+        }
+      }
+    },
+    "LandingPageComponentTestimonialItem": {
+      "type": "object",
+      "properties": {
+        "userName": {
+          "type": "string"
+        },
+        "userImage": {
+          "$ref": "#/definitions/LandingPageComponentImage"
+        },
+        "userRole": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "integer"
+        }
+      }
+    },
+    "LandingPageComponentTestimonial": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPageComponentTestimonialItem"
+          }
+        }
+      }
+    },
+    "LandingPageComponentFaqItem": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "string"
+        }
+      }
+    },
+    "LandingPageComponentFaq": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPageComponentFaqItem"
+          }
+        }
+      }
+    },
+    "LandingPageComponentButton": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string",
+          "default": "large",
+          "enum": [
+            "small",
+            "medium",
+            "large"
+          ]
+        },
+        "bgColor": {
+          "type": "string"
+        },
+        "textColor": {
+          "type": "string"
+        },
+        "icon": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attributeId": {
+          "type": "string"
+        }
+      }
+    },
+    "LandingPageComponentSticky": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "type": "string",
+          "default": "bottom",
+          "enum": [
+            "top",
+            "bottom"
+          ]
+        },
+        "content": {
+          "$ref": "#/definitions/LandingPageComponentContent"
+        }
+      }
+    },
+    "LandingPageComponentEmbedYouTube": {
+      "type": "object",
+      "properties": {
+        "youtubeUrl": {
+          "type": "string"
+        },
+        "width": {
+          "type": "string"
+        },
+        "height": {
+          "type": "string"
+        }
+      }
+    },
+    "LandingPageComponentDivider": {
+      "type": "object",
+      "properties": {
+        "size": {
+          "type": "integer"
+        }
+      }
+    },
+    "LandingPageComponentSection": {
+      "type": "object",
+      "properties": {
+        "contents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LandingPageComponentContent"
+          }
+        }
+      }
+    },
+    "TransactionDetail": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "integer"
+        }
+      }
+    },
+    "XenditInvoice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "invoice_url": {
+          "type": "string"
+        },
+        "reminder_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "expiry_date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "XenditWebhook": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "external_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "is_high": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "payment_method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "default": "PENDING",
+          "enum": [
+            "PAID",
+            "EXPIRED",
+            "PENDING"
+          ]
+        },
+        "merchant_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "amount": {
+          "type": "integer"
+        },
+        "paid_amount": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "bank_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "paid_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "payer_email": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "adjusted_received_amount": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "fees_paid_amount": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "updated": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "created": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "payment_channel": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "payment_destination": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "payment_details": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/XenditWebhookPaymentDetails"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "XenditWebhookPaymentDetails": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "receipt_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "XenditAccountPublicProfile": {
+      "type": "object",
+      "properties": {
+        "business_name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "XenditAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "updated": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "MANAGED",
+            "OWNED",
+            "CUSTOM"
+          ]
+        },
+        "email": {
+          "type": "string"
+        },
+        "public_profile": {
+          "$ref": "#/definitions/XenditAccountPublicProfile"
+        },
+        "country": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "INVITED",
+            "REGISTERED",
+            "AWAITING_DOCS",
+            "LIVE",
+            "SUSPENDED"
+          ]
+        },
+        "congigurations": {
+          "type": [
+            "number",
+            "string",
+            "boolean",
+            "object",
+            "array",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "business": {
+      "$ref": "#/definitions/Business"
+    },
+    "businessContact": {
+      "$ref": "#/definitions/BusinessContact"
+    },
+    "product": {
+      "$ref": "#/definitions/Product"
+    },
+    "course": {
+      "$ref": "#/definitions/Course"
+    },
+    "lesson": {
+      "$ref": "#/definitions/Lesson"
+    },
+    "examQuestion": {
+      "$ref": "#/definitions/ExamQuestion"
+    },
+    "examChoice": {
+      "$ref": "#/definitions/ExamChoice"
+    },
+    "eventSchedule": {
+      "$ref": "#/definitions/EventSchedule"
+    },
+    "event": {
+      "$ref": "#/definitions/Event"
+    },
+    "membership": {
+      "$ref": "#/definitions/Membership"
+    },
+    "chatRoom": {
+      "$ref": "#/definitions/ChatRoom"
+    },
+    "chatRoomUser": {
+      "$ref": "#/definitions/ChatRoomUser"
+    },
+    "chat": {
+      "$ref": "#/definitions/Chat"
+    },
+    "post": {
+      "$ref": "#/definitions/Post"
+    },
+    "postPoolingAnswer": {
+      "$ref": "#/definitions/PostPoolingAnswer"
+    },
+    "postLike": {
+      "$ref": "#/definitions/PostLike"
+    },
+    "postComment": {
+      "$ref": "#/definitions/PostComment"
+    },
+    "token": {
+      "$ref": "#/definitions/Token"
+    },
+    "notification": {
+      "$ref": "#/definitions/Notification"
+    },
+    "businessAdmin": {
+      "$ref": "#/definitions/BusinessAdmin"
+    },
+    "membershipActivity": {
+      "$ref": "#/definitions/MembershipActivity"
+    },
+    "userActivity": {
+      "$ref": "#/definitions/UserActivity"
+    },
+    "aIChat": {
+      "$ref": "#/definitions/AIChat"
+    },
+    "aIChatMessage": {
+      "$ref": "#/definitions/AIChatMessage"
+    },
+    "discount": {
+      "$ref": "#/definitions/Discount"
+    },
+    "pricing": {
+      "$ref": "#/definitions/Pricing"
+    },
+    "pricingBundleProduct": {
+      "$ref": "#/definitions/PricingBundleProduct"
+    },
+    "landingPage": {
+      "$ref": "#/definitions/LandingPage"
+    },
+    "landingPageComponent": {
+      "$ref": "#/definitions/LandingPageComponent"
+    },
+    "landingPagePricing": {
+      "$ref": "#/definitions/LandingPagePricing"
+    },
+    "pricingDiscount": {
+      "$ref": "#/definitions/PricingDiscount"
+    },
+    "pricingAgencyFee": {
+      "$ref": "#/definitions/PricingAgencyFee"
+    },
+    "transaction": {
+      "$ref": "#/definitions/Transaction"
+    },
+    "transactionPricing": {
+      "$ref": "#/definitions/TransactionPricing"
+    },
+    "transactionProduct": {
+      "$ref": "#/definitions/TransactionProduct"
+    },
+    "membershipSubscription": {
+      "$ref": "#/definitions/MembershipSubscription"
+    },
+    "messageTemplate": {
+      "$ref": "#/definitions/MessageTemplate"
+    },
+    "message": {
+      "$ref": "#/definitions/Message"
+    },
+    "metaPixel": {
+      "$ref": "#/definitions/MetaPixel"
+    },
+    "businessWhatsapp": {
+      "$ref": "#/definitions/BusinessWhatsapp"
+    },
+    "automation": {
+      "$ref": "#/definitions/Automation"
+    },
+    "automationAction": {
+      "$ref": "#/definitions/AutomationAction"
+    },
+    "automationExecutionLog": {
+      "$ref": "#/definitions/AutomationExecutionLog"
+    }
+  }
+}

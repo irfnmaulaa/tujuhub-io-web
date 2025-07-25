@@ -1,0 +1,323 @@
+import {
+    Card,
+    cn,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownTrigger,
+    Popover, PopoverContent,
+    PopoverTrigger
+} from "@heroui/react"
+import Button from "@/shared/design-system/button/Button.tsx";
+import {
+    TbBell,
+    TbBox,
+    TbChevronDown,
+    TbChevronRight,
+    TbHome,
+    TbLogout,
+    TbMenu2, TbMoon,
+    TbSchool, TbSun,
+    TbUserCircle
+} from "react-icons/tb";
+import {NavLink, useNavigate} from "react-router-dom";
+import useProfile from "@/modules/profile/api/useProfile.ts";
+import {type Key, type PropsWithChildren, useEffect, useRef, useState} from "react";
+import usePersonalInfo from "@/modules/profile/hooks/usePersonalInfo.tsx";
+import {useLogout} from "@/modules/auth/api/useLogout.ts";
+import {toastSuccess} from "@/shared/utils/toast.ts";
+import useTheme from "@/shared/hooks/useTheme.ts";
+
+export default function MentorLayout({ children, pageTitle }: PropsWithChildren & {
+    pageTitle: string;
+}) {
+
+    // define hooks
+    const personalInfo = usePersonalInfo()
+    const navigate = useNavigate()
+
+    // define queries
+    const profile = useProfile()
+
+    // define mutations
+    const logout = useLogout({
+        onSettled: () => {
+            toastSuccess('Logged out successful', { dismissBefore: true })
+            setTimeout(() => {
+                navigate('/sign-in')
+            }, 1000)
+        }
+    })
+
+    // define state
+    const [isCollapsed, setCollapsed] = useState(false);
+    const mainRef = useRef<HTMLDivElement>(null);
+    const { theme, setTheme } = useTheme()
+
+    // define profile action
+    const profileAction = async (key: Key) => {
+        if(key === 'logout') {
+            await logout.mutateAsync({})
+        }
+    }
+
+    useEffect(() => {
+        document.title = `${pageTitle} · ${import.meta.env.VITE_APP_NAME}`
+    }, [pageTitle]);
+
+    if(profile.isLoading || !profile.data) {
+        return (<div></div>)
+    }
+
+    return (
+        <div>
+            {/* S: Navbar */}
+            <header
+                className={'navbar relative h-[65px] p-3 ps-5 pe-7 flex items-center justify-between border-b border-t border-default-200'}>
+                <div className={'flex items-center gap-3'}>
+                    <Button variant={'flat'} color={'default'} isIconOnly className={'rounded-full'}
+                            onPress={() => setCollapsed(prevState => !prevState)}>
+                        <TbMenu2 className={'size-6'}/>
+                    </Button>
+
+                    <NavLink to={`/`}
+                             className={'flex items-center gap-1.5 font-medium tracking-[-0.5px] font-heading text-[22px]'}>
+                        <img src="/img/logo.png" alt="logo" className={'h-[30px] logo'}/>
+                    </NavLink>
+                </div>
+                <div className="flex items-center gap-12">
+
+
+                    <div className="flex items-center gap-3">
+
+                        <Button isIconOnly variant={'flat'} color={'default'} radius={'full'}><TbBell className={'size-5'}/></Button>
+
+
+                        <Button isIconOnly variant={'flat'} color={'default'} radius={'full'} onPress={() => {
+                            setTheme(theme === 'dark' ? 'light' : 'dark')
+                        }}>
+                            { theme === 'light' ? (
+                                <TbMoon className={'size-5'}/>
+                            ) : (
+                                <TbSun className={'size-5'}/>
+                            ) }
+                        </Button>
+
+                    </div>
+                    <Dropdown placement="bottom-end" showArrow>
+                        <DropdownTrigger>
+                            { personalInfo.getAvatar({
+                                user: profile.data
+                            }) }
+                        </DropdownTrigger>
+                        <DropdownMenu aria-label="Profile Actions" variant="flat" onAction={profileAction}>
+                            <DropdownItem key="profile" className="h-14 gap-2">
+                                <p className="font-semibold">Signed in as</p>
+                                <p className="font-semibold">{profile.data.email}</p>
+                            </DropdownItem>
+
+                            <DropdownItem startContent={<TbBox className={'size-5'}/>} key="my-businesses">My
+                                Businesses</DropdownItem>
+                            <DropdownItem startContent={<TbUserCircle className={'size-5'}/>} key="profile">My
+                                Profile</DropdownItem>
+                            <DropdownItem startContent={<TbLogout className={'size-5'}/>} key="logout"
+                                          className={'text-red-500'}>
+                                Log Out
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
+            </header>
+            {/* E: Navbar */}
+
+            <div
+                className={cn(
+                    'w-[100vw] h-[calc(100vh_-_65px)] grid',
+                )}
+                style={{
+                    gridTemplateColumns: `${isCollapsed ? '80px' : '280px'} 1fr`,
+                    transition: 'all .3s ease-in-out',
+                }}
+            >
+
+                {/* S: Sidebar */}
+                <aside
+                    className={'h-[calc(100vh_-_65px)] w-full p-3 relative border-r border-default-200 flex flex-col justify-between overflow-y-auto'}>
+                    <div>
+                        <Popover
+                            backdrop="opaque"
+                            placement="bottom-start"
+                        >
+                            <PopoverTrigger>
+                                <Card
+                                    isPressable
+                                    className={cn(
+                                        'w-full text-left grid grid-cols-[1fr_auto] gap-2.5 items-center hover:bg-default-100 whitespace-nowrap rounded-lg p-3 font-medium relative group mt-3 mb-5',
+                                    )}
+                                >
+                                    <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
+                                        <div
+                                            className="w-full aspect-[1/1] flex items-center justify-center rounded-full overflow-hidden border">
+                                            <img src={'/img/logo-circle.png'} alt="business"/>
+                                        </div>
+
+                                        {!isCollapsed ? 'Tujuhub' : (
+                                            <div
+                                                className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>
+                                                Tujuhub
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div>
+                                        <TbChevronDown className="size-5"/>
+                                    </div>
+                                </Card>
+                            </PopoverTrigger>
+                            <PopoverContent
+                                className="rounded-lg w-full p-0 max-w-[500px] text-left max-h-[500px] items-start justify-start overflow-auto">
+
+                                <Card isPressable onPress={() => {
+
+                                }} className="p-3 border-none hover:bg-default-100 overflow-visible text-left rounded-lg w-full grid grid-cols-[30px_1fr] items-center gap-3 pe-24">
+                                    <div
+                                        className="w-full aspect-[1/1] flex items-center justify-center rounded-full overflow-hidden border">
+                                        <img src={'/img/logo-circle.png'} alt="tujuhub"/>
+                                    </div>
+                                    <div>
+                                        Tujuhub
+                                    </div>
+                                </Card>
+
+                            </PopoverContent>
+                        </Popover>
+
+                        <div className={cn(isCollapsed ? 'border rounded-lg my-1' : '')}>
+                            <input type="checkbox" id={`sidebar-menu-1`}
+                                   className="sidebar-menu-checkbox hidden"
+                            />
+                            <label
+                                htmlFor={`sidebar-menu-1`}
+                                className={cn(
+                                    'w-full cursor-pointer grid select-none gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                    'bg-default-100 text-default-800 font-bold',
+                                    isCollapsed ? 'grid-cols-1' : 'grid-cols-[1fr_auto]'
+                                )}
+                            >
+                                <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
+                                    <div
+                                        className="w-full aspect-[1/1] flex items-center justify-center">
+                                        <TbHome className={'size-6'}/>
+                                    </div>
+
+                                    {!isCollapsed ? 'Home' : (
+                                        <div
+                                            className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'Home'}</div>
+                                    )}
+                                </div>
+                                {!isCollapsed && (
+                                    <div>
+                                        <TbChevronRight
+                                            className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
+                                    </div>
+                                )}
+                            </label>
+
+                            <div className="sidebar-sub-menu">
+                                <div className={cn('overflow-hidden', isCollapsed ? '' : 'ms-6 border-l border-default-200')}>
+                                    <NavLink
+                                        to={'/'}
+                                        className={cn(
+                                            'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                            'text-default-800 font-semibold'
+                                        )}
+                                    >
+                                        <div
+                                            className="w-full aspect-[1/1] flex items-center justify-center">
+                                            <TbSchool className={'size-6'}/>
+                                        </div>
+
+                                        {!isCollapsed ? 'Products' : (
+                                            <div
+                                                className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'Products'}</div>
+                                        )}
+                                    </NavLink>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={cn(isCollapsed ? 'border rounded-lg my-1' : '')}>
+                            <input type="checkbox" id={`sidebar-menu-2`}
+                                   className="sidebar-menu-checkbox hidden"
+                            />
+                            <label
+                                htmlFor={`sidebar-menu-2`}
+                                className={cn(
+                                    'w-full cursor-pointer grid select-none gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                    isCollapsed ? 'grid-cols-1' : 'grid-cols-[1fr_auto]'
+                                )}
+                            >
+                                <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
+                                    <div
+                                        className="w-full aspect-[1/1] flex items-center justify-center">
+                                        <TbBox className={'size-6'}/>
+                                    </div>
+
+                                    {!isCollapsed ? 'Products' : (
+                                        <div
+                                            className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'Products'}</div>
+                                    )}
+                                </div>
+                                {!isCollapsed && (
+                                    <div>
+                                        <TbChevronRight
+                                            className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
+                                    </div>
+                                )}
+                            </label>
+
+                            <div className="sidebar-sub-menu">
+                                <div className={cn('overflow-hidden', isCollapsed ? '' : 'ms-6 border-l border-default-200')}>
+                                    <NavLink
+                                        to={'/'}
+                                        className={cn(
+                                            'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                        )}
+                                    >
+                                        <div
+                                            className="w-full aspect-[1/1] flex items-center justify-center">
+                                            <TbSchool className={'size-6'}/>
+                                        </div>
+
+                                        {!isCollapsed ? 'E-Course' : (
+                                            <div
+                                                className={'absolute bottom-0 left-[50%] translate-x-[-50%] translate-y-[calc(100%_+_5px)] pointer-events-none px-2 py-1.5 rounded bg-primary text-white2 bg-opacity-90 shadow text-[10px] z-20 opacity-0 transition-all duration-200 group-hover:opacity-100'}>{'E-Course'}</div>
+                                        )}
+                                    </NavLink>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                    {/*  menu bottom  */}
+                    </div>
+                </aside>
+                {/* E: Sidebar */}
+
+                {/* S: Main */}
+                <div className="w-full h-[calc(100vh_-_65px)] overflow-y-auto custom-scroll without-space"
+                     ref={mainRef}>
+                    <div className="min-h-[calc(100vh_-_130px)]">
+                        {children}
+                    </div>
+
+                    <footer className={'py-4 px-10 border-t border-default-200 text-center font-light mt-2.5 text-sm'}>
+                        Copyright &copy; 2025, Tujuhub.
+                    </footer>
+                </div>
+                {/* E: Main */}
+
+            </div>
+        </div>
+    )
+}

@@ -1,0 +1,1572 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "./generated/json-schema"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// GENERAL
+enum AttachmentType {
+  image
+  video
+  link
+  file
+  documentPdf
+}
+
+type Attachment {
+  url      String
+  name     String?
+  type     AttachmentType
+  mimeType String?
+}
+
+// USER
+model User {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  firstName     String
+  email         String       @unique
+  lastName      String?
+  phone         String?      @unique
+  country       String?
+  location      String?
+  timeZone      String?
+  isActive      Boolean?
+  isOnline      Boolean?
+  lastOnlineAt  DateTime?
+  picture       String?
+  verifiedEmail Boolean?
+  authMethods   AuthMethods?
+  locale        String?
+  createdAt     DateTime?    @default(now())
+  updatedAt     DateTime?
+
+  isSuperuser Boolean?
+
+  totpSecret      String?
+  totpUrl         String?
+  isTotpGenerated Boolean?
+
+  firebaseClientIds String[]
+  isFake            Boolean?
+
+  businesses               Business[]
+  createdProducts          Product[]
+  createdEvents            Event[]
+  createdCourses           Course[]
+  createdMemberships       Membership[]
+  createdChatRooms         ChatRoom[]
+  enrolledChatRooms        ChatRoomUser[]
+  chats                    Chat[]
+  posts                    Post[]
+  postPoolingAnswers       PostPoolingAnswer[]
+  postLikes                PostLike[]
+  postComments             PostComment[]
+  notifications            Notification[]
+  tokens                   Token[]
+  businessAdmins           BusinessAdmin[]
+  membershipActivities     MembershipActivity[]
+  createdDiscounts         Discount[]
+  activities               UserActivity[]
+  createdPricingDiscounts  PricingDiscount[]
+  createdPricingAgencyFees PricingAgencyFee[]
+  createdPricings          Pricing[]
+  createdLandingPages      LandingPage[]
+  transactions             Transaction[]
+  createdMessageTemplates  MessageTemplate[]
+  createdMetaPixels        MetaPixel[]
+  createdAutomations       Automation[]
+  createdBusinessContacts  BusinessContact[]
+  createdBusinessWhatsapps BusinessWhatsapp[]
+
+  @@map("users")
+}
+
+type AuthApp {
+  passwordHash String?
+}
+
+type AuthMethods {
+  app    AuthApp?
+  google Json?
+}
+
+// BUSINESS
+enum BusinessTierOptions {
+  starter
+  growth
+  pro
+  elite
+}
+
+model Business {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+
+  name   String
+  slug   String @unique
+  domain String @unique
+
+  description String?
+  logoSrc     String?
+  logoLongSrc String?
+  coverSrc    String?
+
+  creator   User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isBanned  Boolean?  @default(false)
+  isDeleted Boolean?  @default(false)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  tier              BusinessTierOptions      @default(starter)
+  extraChargePolicy ExtraChargePolicyOptions @default(customer)
+
+  xenditAccount XenditAccount?
+
+  products         Product[]
+  courses          Course[]
+  events           Event[]
+  memberships      Membership[]
+  notifications    Notification[]
+  admins           BusinessAdmin[]
+  discounts        Discount[]
+  pricings         Pricing[]
+  landingPages     LandingPage[]
+  transactions     Transaction[]
+  messageTemplates MessageTemplate[]
+  automations      Automation[]
+  metaPixels       MetaPixel[]
+  contacts         BusinessContact[]
+  whatsapps        BusinessWhatsapp[]
+
+  @@map("businesses")
+}
+
+model BusinessContact {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+  createdBy  String @db.ObjectId
+  creator    User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  type        ContactType
+  title       String
+  value       String
+  description String?
+  isActive    Boolean     @default(true)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  business  Business?          @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  whatsapps BusinessWhatsapp[]
+
+  @@map("business_contacts")
+}
+
+enum ContactType {
+  whatsappNumber
+  email
+  instagramUsername
+  facebookUrl
+}
+
+// PRODUCT
+enum ProductType {
+  course
+  event
+  membership
+}
+
+model Product {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+  createdBy  String @db.ObjectId
+  creator    User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  title        String
+  slug         String  @unique
+  summary      String?
+  description  Json?
+  thumbnailSrc String?
+
+  productType ProductType
+  isDeleted   Boolean     @default(false)
+
+  automationId String?     @db.ObjectId
+  automation   Automation? @relation(fields: [automationId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  business       Business?              @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  courses        Course[]               @relation("ProductCourse")
+  events         Event[]                @relation("ProductEvent")
+  memberships    Membership[]           @relation("ProductMembership")
+  pricingBundles PricingBundleProduct[]
+
+  transactionProducts     TransactionProduct[]
+  Pricing                 Pricing[]
+  MembershipSubscription  MembershipSubscription[]
+  automationExecutionLogs AutomationExecutionLog[] @relation("ProductAutomationExecutionLog")
+
+  @@map("products")
+}
+
+// COURSE
+model Course {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+  productId  String @db.ObjectId @unique
+  createdBy  String @db.ObjectId
+
+  title       String
+  isPublished Boolean? @default(false)
+  isDeleted   Boolean  @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+
+  business Business? @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  product  Product?  @relation("ProductCourse", fields: [productId], references: [id], onDelete: Cascade)
+  creator  User?     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  lessons  Lesson[]
+  aiChats  AIChat[]  @relation("AIChatCourses")
+
+  @@map("courses")
+}
+
+enum LessonType {
+  page
+  video
+  exam
+  link
+  documentPdf
+  embedToutube
+  embedGoogleDrive
+  embedSpotify
+}
+
+type Media {
+  type MediaType
+  url  String
+}
+
+enum MediaType {
+  image
+  video
+  audio
+  youtube
+  googleDrive
+  loom
+  spotify
+  documentPdf
+}
+
+enum LessonStatus {
+  published
+  draft
+}
+
+model Lesson {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  course Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  type        LessonType? @default(page)
+  title       String
+  order       Int         @default(0)
+  summary     String?
+  description Json?
+  byAi        Boolean?    @default(false)
+
+  media Media?
+
+  sectionName String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime?
+  courseId    String    @db.ObjectId
+
+  status LessonStatus? @default(published)
+
+  examQuestions ExamQuestion[]
+
+  @@map("lessons")
+}
+
+enum ExamQuestionType {
+  multiple
+  fill_blank
+  reorder
+  match
+  dropdown
+  hotspot
+  categorize
+}
+
+model ExamQuestion {
+  id                   String           @id @default(auto()) @map("_id") @db.ObjectId
+  lessonId             String           @db.ObjectId
+  type                 ExamQuestionType @default(multiple)
+  content              String?
+  media                Media?
+  estimationTimeMinute Int              @default(1)
+  mark_as_point        Int              @default(1)
+  isRequired           Boolean          @default(true)
+  createdAt            DateTime?        @default(now())
+  updatedAt            DateTime?
+  order                Int?             @default(0)
+  byAi                 Boolean?         @default(false)
+
+  multipleSettings   ExamQuestionMultipleSettings?
+  categorizeSettings ExamQuestionCategorizeSettings?
+  matchSettings      ExamQuestionCategorizeSettings?
+
+  lesson  Lesson?      @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  choices ExamChoice[]
+
+  @@map("exam_questions")
+}
+
+type ExamQuestionCategory {
+  content String
+  media   Media?
+}
+
+type ExamQuestionMultipleSettings {
+  isMultipleAnswer  Boolean @default(true)
+  isAnswerWithImage Boolean @default(false)
+  isRandomizedOrder Boolean @default(true)
+}
+
+type ExamQuestionCategorizeSettings {
+  categories ExamQuestionCategory[]
+}
+
+model ExamChoice {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  examQuestionId String    @db.ObjectId
+  content        String?
+  media          Media?
+  order          Int?      @default(0)
+  createdAt      DateTime? @default(now())
+  updatedAt      DateTime?
+
+  multipleSettings   ExamChoiceMultipleSettings?
+  hotspotSettings    ExamChoiceHotspotSettings?
+  reorderSettings    ExamChoiceReorderSettings?
+  categorizeSettings ExamChoiceCaterorizeSettings?
+  matchSettings      ExamChoiceCaterorizeSettings?
+
+  examQuestion ExamQuestion? @relation(fields: [examQuestionId], references: [id], onDelete: Cascade)
+
+  @@map("exam_choices")
+}
+
+type ExamChoiceMultipleSettings {
+  isCorrect Boolean @default(false)
+}
+
+type ExamChoiceHotspotSettings {
+  isCorrect Boolean @default(false)
+  x         Int
+  y         Int
+  width     Int
+  height    Int
+}
+
+type ExamChoiceReorderSettings {
+  order Int @default(0)
+}
+
+type ExamChoiceCaterorizeSettings {
+  category String
+}
+
+// EVENT
+model EventSchedule {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  eventId      String       @db.ObjectId
+  event        Event?       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  description  Json?
+  date         DateTime
+  duration     String
+  timezone     String?
+  locationType LocationType
+  locationLink String
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?
+
+  @@map("event_schedules")
+}
+
+model Event {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+  productId  String @db.ObjectId @unique
+
+  title   String
+  summary String?
+  banner  String?
+
+  description Json?
+
+  isDeleted   Boolean   @default(false)
+  isPublished Boolean?  @default(false)
+  createdBy   String?   @db.ObjectId
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime?
+
+  creator   User?           @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  business  Business?       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  product   Product?        @relation("ProductEvent", fields: [productId], references: [id], onDelete: Cascade)
+  schedules EventSchedule[]
+
+  @@map("events")
+}
+
+enum LocationType {
+  zoom
+  googleMeet
+  address
+  link
+}
+
+// MEMBERSHIP
+model Membership {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+  productId  String @db.ObjectId @unique
+  createdBy  String @db.ObjectId
+
+  title       String
+  isPublished Boolean? @default(false)
+  isDeleted   Boolean  @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+
+  business             Business?            @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  product              Product?             @relation("ProductMembership", fields: [productId], references: [id], onDelete: Cascade)
+  creator              User?                @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  membershipActivities MembershipActivity[]
+
+  @@map("memberships")
+}
+
+// CHAT ROOM
+model ChatRoom {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  productType ProductType
+  productId   String      @db.ObjectId
+
+  title       String?
+  slug        String? @unique @default("no")
+  summary     String?
+  description String?
+  banner      String?
+
+  createdBy String?   @db.ObjectId
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+  isDeleted Boolean?  @default(false)
+
+  chats   Chat[]
+  members ChatRoomUser[]
+  creator User?          @relation(fields: [createdBy], references: [id])
+
+  @@map("chat_rooms")
+}
+
+enum ChatUserRole {
+  admin
+  member
+}
+
+model ChatRoomUser {
+  id     String       @id @default(auto()) @map("_id") @db.ObjectId
+  roomId String       @db.ObjectId
+  userId String       @db.ObjectId
+  role   ChatUserRole @default(member)
+
+  room ChatRoom? @relation(fields: [roomId], references: [id])
+  user User?     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("chat_room_users")
+}
+
+enum ChatType {
+  image
+  video
+  file
+  text
+}
+
+model Chat {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  roomId        String       @db.ObjectId
+  userId        String       @db.ObjectId
+  text          String
+  attachmentUrl String?
+  attachments   Attachment[]
+  type          ChatType?    @default(text)
+
+  room ChatRoom? @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  user User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("chats")
+}
+
+// POST
+enum PostType {
+  course // course discussion
+  lesson // lesson discussion
+  event // event discussion
+  membership // membership feed
+}
+
+model Post {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId         String          @db.ObjectId
+  caption        String
+  attachments    Attachment[]
+  feelOrActivity FeelOrActivity?
+  pooling        Pooling?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime?
+
+  postTypeId String   @db.ObjectId
+  postType   PostType @default(membership)
+  isPinned   Boolean? @default(false)
+
+  likes          PostLike[]
+  comments       PostComment[]
+  user           User?               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  poolingAnswers PostPoolingAnswer[]
+
+  @@map("posts")
+}
+
+type FeelOrActivity {
+  title String?
+}
+
+type Pooling {
+  title       String
+  type        PoolingType     @default(singleAnswer)
+  description String?
+  choices     PoolingChoice[]
+}
+
+type PoolingChoice {
+  choice String
+}
+
+enum PoolingType {
+  singleAnswer
+  multipleAnswer
+}
+
+model PostPoolingAnswer {
+  id     String        @id @default(auto()) @map("_id") @db.ObjectId
+  postId String        @db.ObjectId
+  userId String        @db.ObjectId
+  choice PoolingChoice
+
+  user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@map("post_pooling_answers")
+}
+
+model PostLike {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  postId    String?   @db.ObjectId
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post?     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("post_likes")
+}
+
+model PostComment {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String       @db.ObjectId
+  postId      String?      @db.ObjectId
+  comment     String
+  user        User?        @relation(fields: [userId], references: [id])
+  post        Post?        @relation(fields: [postId], references: [id])
+  createdAt   DateTime?    @default(now())
+  updatedAt   DateTime?
+  attachments Attachment[]
+  isPinned    Boolean?     @default(false)
+
+  @@map("post_comments")
+}
+
+// TOKEN
+model Token {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  token       String    @unique
+  userId      String    @db.ObjectId
+  name        TokenType
+  description String?
+  createdAt   DateTime  @default(now())
+  expiredAt   DateTime
+  updatedAt   DateTime?
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("tokens")
+}
+
+enum TokenType {
+  forgotPassword
+  requestPayout
+}
+
+// NOTIFICATION
+model Notification {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String? @db.ObjectId
+  userId     String? @db.ObjectId
+
+  title       String
+  description String
+
+  type NotificationType
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  links    NotificationLink[]
+  business Business?          @relation(fields: [businessId], references: [id])
+  user     User?              @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+type NotificationLink {
+  type  NotificationLinkType
+  text  String?
+  value String
+}
+
+enum NotificationLinkType {
+  external
+  internal
+}
+
+enum NotificationType {
+  // for all
+  post // for all business members except post creator
+  liked // for post creator
+  comment // for post creator
+  mentioned // for specific user
+  chat
+
+  // for members -> userId
+  paymentPending
+  purchase
+  subscription
+  joinedMembership
+  gift
+
+  // for mentor -> userId
+  received
+  requestPayoutCreated
+  requestPayoutAccepted
+  requestPayoutDeclined
+}
+
+enum AdminRole {
+  coAdmin
+}
+
+model BusinessAdmin {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId     String    @db.ObjectId
+  businessId String    @db.ObjectId
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime?
+  role       AdminRole @default(coAdmin)
+  user       User?     @relation(fields: [userId], references: [id])
+  business   Business? @relation(fields: [businessId], references: [id])
+
+  @@map("business_admins")
+}
+
+// ACTIVITY
+enum ActivityFeature {
+  business
+  course
+  event
+  post
+  discount
+  payout
+  space
+  lesson
+  comment
+  like
+  invoice
+  purchase
+  subscribe
+  joinMembership
+  courseProgress
+  member
+  gift
+  memberField
+  chat
+  learningPath
+  learningPathLevel
+  learningPathContent
+  tag
+  socialFeed
+  article
+  chatRoom
+  link
+  digitalProduct
+  announcement
+  coaching
+  challenge
+  contentTag
+  eventSchedule
+  poolingAnswer
+}
+
+enum ActivityType {
+  create
+  update
+  delete
+  find
+  findMany
+}
+
+model MembershipActivity {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  membershipId String @db.ObjectId
+  userId       String @db.ObjectId
+
+  membership Membership? @relation(fields: [membershipId], references: [id])
+  user       User?       @relation(fields: [userId], references: [id])
+
+  featureId String          @db.ObjectId
+  feature   ActivityFeature
+  type      ActivityType
+
+  description String?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("membership_activities")
+}
+
+model UserActivity {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+
+  user User? @relation(fields: [userId], references: [id])
+
+  modelName String
+  action    String
+
+  description String?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("user_activities")
+}
+
+// AI Chat
+enum AiChatType {
+  course
+}
+
+model AIChat {
+  id            String     @id @default(auto()) @map("_id") @db.ObjectId
+  type          AiChatType
+  typeId        String     @db.ObjectId
+  title         String
+  momorySummary String?
+
+  course   Course?         @relation("AIChatCourses", fields: [typeId], references: [id], onDelete: Cascade)
+  messages AIChatMessage[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("ai_chats")
+}
+
+enum AIChatRole {
+  user
+  assistant
+}
+
+enum AIChatMessageAskFor {
+  // under course
+  generateLessons
+  generateQuizQuestions
+  generateLessonContent
+}
+
+model AIChatMessage {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  chatId      String     @db.ObjectId
+  role        AIChatRole @default(user)
+  content     String?
+  contentJson Json?
+
+  askFor    AIChatMessageAskFor?
+  keyword   String?
+  relatedId String?              @db.ObjectId
+
+  aiChat AIChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("ai_chat_messages")
+}
+
+// DISCOUNT
+model Discount {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String  @db.ObjectId
+  code       String?
+  createdBy  String? @db.ObjectId
+  name       String
+
+  type            AmountValueType
+  fixedValue      Int
+  percentageValue Int
+
+  isActive Boolean @default(false)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  business        Business?         @relation(fields: [businessId], references: [id])
+  creator         User?             @relation(fields: [createdBy], references: [id])
+  PricingDiscount PricingDiscount[]
+
+  @@map("discounts")
+}
+
+enum AmountValueType {
+  percentage
+  fixed
+}
+
+// PRICING PRODUCTS
+enum PricingType {
+  individual
+  bundle
+}
+
+enum ExtraChargePolicyOptions {
+  customer
+  admin
+}
+
+model Pricing {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+
+  type PricingType
+
+  // for individual
+  productId String? @db.String
+
+  title       String
+  description String?
+  currency    String  @default("IDR")
+  price       Int
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  product             Product?               @relation(fields: [productId], references: [id])
+  business            Business               @relation(fields: [businessId], references: [id])
+  landingPagePricings LandingPagePricing[]
+  transactionPricings TransactionPricing[]
+  pricingDiscounts    PricingDiscount[]
+  pricingAgencyFees   PricingAgencyFee[]
+  bundleProducts      PricingBundleProduct[]
+
+  createdBy String? @db.ObjectId
+  creator   User?   @relation(fields: [createdBy], references: [id])
+
+  @@map("pricings")
+}
+
+model PricingBundleProduct {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  productId String @db.String
+  pricingId String @db.String
+
+  product Product @relation(fields: [productId], references: [id])
+  pricing Pricing @relation(fields: [pricingId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("pricing_bundle_products")
+}
+
+// pricings: product a -> 50.000
+// pricing_bundle: product a + product b + product c -> 150.000
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+// LANDING PAGES
+enum LandingPageType {
+  default
+  home
+}
+
+model LandingPage {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+
+  title       String
+  description String?
+  type        LandingPageType @default(default)
+
+  // this automation will be applied on transaction created by the landing page
+  automationId String?     @db.ObjectId
+  automation   Automation? @relation(fields: [automationId], references: [id])
+
+  components          LandingPageComponent[]
+  landingPagePricings LandingPagePricing[]
+  transactions        Transaction[]
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  createdBy String?  @db.ObjectId
+  creator   User?    @relation(fields: [createdBy], references: [id])
+  business  Business @relation(fields: [businessId], references: [id])
+
+  @@map("landing_pages")
+}
+
+// LANDING PAGE COMPONENTS
+model LandingPageComponent {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  landingPageId String @db.String
+
+  landingPage LandingPage?                @relation(fields: [landingPageId], references: [id])
+  content     LandingPageComponentContent
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("landing_page_components")
+}
+
+enum LandingPageComponentType {
+  text
+  image
+  carousel
+  flexbox
+  testimonial
+  faq
+  button
+  embedYoutube
+  divider
+  sticky
+  section
+}
+
+type LandingPageComponentContent {
+  type         LandingPageComponentType
+  text         LandingPageComponentText?
+  image        LandingPageComponentImage?
+  carousel     LandingPageComponentCarousel?
+  flexbox      LandingPageComponentFlexBox?
+  testimonial  LandingPageComponentTestimonial?
+  faq          LandingPageComponentFaq?
+  button       LandingPageComponentButton?
+  embedYoutube LandingPageComponentEmbedYouTube?
+  divider      LandingPageComponentDivider?
+  section      LandingPageComponentSection?
+}
+
+type LandingPageComponentEditor {
+  content Json?
+}
+
+type LandingPageComponentText {
+  content Json?
+}
+
+type LandingPageComponentImage {
+  src    String
+  size   String
+  width  String
+  height String
+  alt    String?
+}
+
+type LandingPageComponentCarousel {
+  title  String
+  images LandingPageComponentImage[]
+}
+
+type LandingPageComponentFlexBox {
+  title String
+  items LandingPageComponentEditor[]
+}
+
+type LandingPageComponentTestimonialItem {
+  userName  String
+  userImage LandingPageComponentImage
+  userRole  String?
+  text      String
+  rating    Int
+}
+
+type LandingPageComponentTestimonial {
+  title String
+  items LandingPageComponentTestimonialItem[]
+}
+
+type LandingPageComponentFaqItem {
+  question String
+  answer   String
+}
+
+type LandingPageComponentFaq {
+  title String
+  items LandingPageComponentFaqItem[]
+}
+
+enum LandingPageComponentButtonSize {
+  small
+  medium
+  large
+}
+
+type LandingPageComponentButton {
+  text        String
+  size        LandingPageComponentButtonSize @default(large)
+  bgColor     String
+  textColor   String
+  icon        String?
+  attributeId String
+}
+
+enum LandingPageComponentStickyPosition {
+  top
+  bottom
+}
+
+type LandingPageComponentSticky {
+  position LandingPageComponentStickyPosition @default(bottom)
+  content  LandingPageComponentContent
+}
+
+type LandingPageComponentEmbedYouTube {
+  youtubeUrl String
+  width      String
+  height     String
+}
+
+type LandingPageComponentDivider {
+  size Int
+}
+
+type LandingPageComponentSection {
+  contents LandingPageComponentContent[]
+}
+
+// LANDING PAGE PRICINGS (product/budle)
+model LandingPagePricing {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  pricingId     String @db.ObjectId
+  landingPageId String @db.ObjectId
+
+  pricing     Pricing?     @relation(fields: [pricingId], references: [id])
+  landingPage LandingPage? @relation(fields: [landingPageId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  @@map("landing_page_pricings")
+}
+
+// PRICING APPLIED DISCOUNTS
+model PricingDiscount {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  pricingId  String @db.ObjectId
+  discountId String @db.ObjectId
+
+  pricing  Pricing?  @relation(fields: [pricingId], references: [id])
+  discount Discount? @relation(fields: [discountId], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  createdBy String? @db.ObjectId
+  creator   User?   @relation(fields: [createdBy], references: [id])
+
+  @@map("pricing_discounts")
+}
+
+// PRICING APPLIED AGENCY
+model PricingAgencyFee {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  pricingId String @db.ObjectId
+
+  pricing Pricing? @relation(fields: [pricingId], references: [id])
+
+  type            AmountValueType
+  fixedValue      Int
+  percentageValue Int
+
+  isActive Boolean @default(false)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  createdBy String? @db.ObjectId
+  creator   User?   @relation(fields: [createdBy], references: [id])
+
+  @@map("pricing_agency_fees")
+}
+
+// TRANSACTIONS
+enum TransactionStatus {
+  pending
+  completed
+  expired
+}
+
+type TransactionDetail {
+  title    String
+  currency String
+  amount   Int
+}
+
+enum TransactionProvider {
+  manual
+  xendit
+  flip
+}
+
+model Transaction {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String            @db.ObjectId
+  status TransactionStatus @default(pending)
+
+  currency String
+
+  grossAmount           Int
+  totalExtraCharges     Int @default(0)
+  totalAgencyFee        Int @default(0)
+  totalDiscountsApplied Int @default(0)
+  payableAmount         Int
+  finalAmount           Int
+
+  automationId String?     @db.ObjectId
+  automation   Automation? @relation(fields: [automationId], references: [id])
+
+  amountDetails      TransactionDetail[]
+  agencyFeeDetails   TransactionDetail[]
+  extraChargeDetails TransactionDetail[]
+  discountDetails    TransactionDetail[]
+
+  isWithdrawn Boolean @default(false)
+
+  provider               TransactionProvider @default(xendit)
+  providerXenditInvoice  XenditInvoice?
+  providerXenditPayoutId String?
+  providerXenditWebhook  XenditWebhook?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  landingPageId String?      @db.ObjectId
+  landingPage   LandingPage? @relation(fields: [landingPageId], references: [id])
+
+  transactionProducts     TransactionProduct[]
+  transactionPricings     TransactionPricing[]
+  membershipSubscriptions MembershipSubscription[]
+
+  extraChargePolicy ExtraChargePolicyOptions @default(customer)
+
+  businessId              String                   @db.ObjectId
+  business                Business                 @relation(fields: [businessId], references: [id])
+  user                    User                     @relation(fields: [userId], references: [id])
+  messages                Message[]                @relation("TransactionMessage")
+  automationExecutionLogs AutomationExecutionLog[] @relation("TransactionAutomationExecutionLog")
+
+  @@map("transactions")
+}
+
+type XenditInvoice {
+  id            String?
+  invoice_url   String
+  reminder_date DateTime?
+  expiry_date   DateTime
+}
+
+enum XenditWebhookStatus {
+  PAID
+  EXPIRED
+  PENDING
+}
+
+type XenditWebhook {
+  id                       String?
+  external_id              String
+  user_id                  String
+  is_high                  Boolean?
+  payment_method           String?
+  status                   XenditWebhookStatus          @default(PENDING)
+  merchant_name            String?
+  amount                   Int
+  paid_amount              Int?
+  bank_code                String?
+  paid_at                  DateTime?
+  payer_email              String?
+  description              String?
+  adjusted_received_amount Int?
+  fees_paid_amount         Int?
+  updated                  DateTime?
+  created                  DateTime?
+  currency                 String
+  payment_channel          String?
+  payment_destination      String?
+  payment_details          XenditWebhookPaymentDetails?
+}
+
+type XenditWebhookPaymentDetails {
+  source     String?
+  receipt_id String?
+}
+
+enum XenditAccountType {
+  MANAGED
+  OWNED
+  CUSTOM
+}
+
+type XenditAccountPublicProfile {
+  business_name String
+  description   String?
+}
+
+enum XenditAccountStatus {
+  INVITED
+  REGISTERED
+  AWAITING_DOCS
+  LIVE
+  SUSPENDED
+}
+
+type XenditAccount {
+  id             String
+  created        String
+  updated        String
+  type           XenditAccountType
+  email          String
+  public_profile XenditAccountPublicProfile
+  country        String
+  status         XenditAccountStatus
+  congigurations Json?
+}
+
+// TRANSACTION PRICINGS
+model TransactionPricing {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  transactionId String @db.ObjectId
+  pricingId     String @db.ObjectId
+  quantity      Int    @default(1)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  pricing     Pricing?     @relation(fields: [pricingId], references: [id])
+  transaction Transaction? @relation(fields: [transactionId], references: [id])
+
+  @@map("transaction_pricings")
+}
+
+// TRANSACTION PRODUCT
+model TransactionProduct {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  transactionId String @db.ObjectId
+  productId     String @db.ObjectId
+
+  productTitle String
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  product     Product?     @relation(fields: [productId], references: [id])
+  transaction Transaction? @relation(fields: [transactionId], references: [id])
+
+  @@map("transaction_products")
+}
+
+// MEMBERSHIP_SUBSCRIPTION
+model MembershipSubscription {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  transactionId String @db.ObjectId
+  productId     String @db.ObjectId
+
+  productTitle String
+  description  String?
+
+  startAt   DateTime
+  expiredAt DateTime
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  product     Product?     @relation(fields: [productId], references: [id])
+  transaction Transaction? @relation(fields: [transactionId], references: [id])
+
+  @@map("membership_subscriptions")
+}
+
+enum PixelEventOpts {
+  PageView
+  ViewContent
+  AddPaymentInfo
+  Lead
+  InitiateCheckout
+  Purchase
+}
+
+// MESSAGE
+enum MessageFor {
+  transaction
+  productEvent
+  productCourse
+  productMembership
+}
+model MessageTemplate {
+  id         String          @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String          @db.ObjectId
+  title      String
+  content    String
+  provider   MessageProvider
+
+  messageFor MessageFor @default(transaction)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  business Business? @relation(fields: [businessId], references: [id])
+
+  createdBy String @db.ObjectId
+  creator   User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("message_templates")
+}
+enum MessageProvider {
+  whatsapp
+  email
+}
+enum WhatsAppProvider {
+  wablas
+  woowa
+}
+model Message {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+
+  provider         MessageProvider
+  whatsappProvider WhatsAppProvider?
+
+  messageFor   MessageFor @default(transaction)
+  messageForId String     @db.ObjectId
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  transaction Transaction? @relation("TransactionMessage", fields: [messageForId], references: [id])
+
+  @@map("messages")
+}
+
+// MetaPixel
+model MetaPixel {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+
+  title           String
+  pixelId         String
+  conversionApiId String
+  isActive        Boolean @default(true)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  business Business? @relation(fields: [businessId], references: [id])
+
+  createdBy String @db.ObjectId
+  creator   User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("meta_pixels")
+}
+
+// Business Whatsapp
+model BusinessWhatsapp {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+
+  provider WhatsAppProvider
+  config   Json?
+
+  contactId String?
+  isActive  Boolean @default(true)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  business Business?        @relation(fields: [businessId], references: [id])
+  contact  BusinessContact? @relation(fields: [contactId], references: [id])
+
+  createdBy String @db.ObjectId
+  creator   User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  @@map("business_whatsapp")
+}
+
+// Automation
+enum AutomationType {
+  transaction
+  productEvent
+}
+model Automation {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  businessId String @db.ObjectId
+
+  title       String
+  description String?
+  type        AutomationType
+  isActive    Boolean        @default(true)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  business Business?          @relation(fields: [businessId], references: [id])
+  actions  AutomationAction[]
+
+  createdBy String @db.ObjectId
+  creator   User?  @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+  landingPages LandingPage[]
+  products     Product[]
+
+  @@map("automations")
+}
+enum TriggerEvent {
+  // for transaction
+  invoiceCreated
+  invoiceExpired
+  invoiceCompleted
+
+  // for product event
+  eventStart
+}
+enum TimeUnit {
+  minute
+  hour
+  day
+  month
+  year
+}
+enum TimeDirection {
+  before
+  after
+}
+enum ActionType {
+  sendWhatsapp
+  sendEmail
+  sendMetaPixelEvent
+}
+model AutomationAction {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  automationId String @db.ObjectId
+
+  title         String
+  triggerEvent  TriggerEvent
+  actionType    ActionType
+  actionPayload Json?
+  condition     Json?
+
+  // execution time
+  timeUnit      TimeUnit
+  timeValue     Int
+  timeDirection TimeDirection
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  automation              Automation?              @relation(fields: [automationId], references: [id])
+  automationExecutionLogs AutomationExecutionLog[]
+
+  @@map("automation_actions")
+}
+
+enum ExecutionLog {
+  success
+  failed
+}
+model AutomationExecutionLog {
+  id                  String         @id @default(auto()) @map("_id") @db.ObjectId
+  automationType      AutomationType
+  automationRelatedId String         @db.ObjectId
+
+  automationActionId String            @db.ObjectId
+  automationAction   AutomationAction? @relation(fields: [automationActionId], references: [id])
+
+  status      ExecutionLog @default(success)
+  description String?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime?
+
+  transaction Transaction? @relation("TransactionAutomationExecutionLog", fields: [automationRelatedId], references: [id])
+  product     Product?     @relation("ProductAutomationExecutionLog", fields: [automationRelatedId], references: [id])
+
+  @@map("automation_execution_logs")
+}
