@@ -1,4 +1,5 @@
 import {
+    Avatar,
     Card,
     cn,
     Dropdown,
@@ -6,7 +7,7 @@ import {
     DropdownMenu,
     DropdownTrigger,
     Popover, PopoverContent,
-    PopoverTrigger
+    PopoverTrigger, Skeleton, Spinner
 } from "@heroui/react"
 import Button from "@/shared/design-system/button/Button.tsx";
 import {
@@ -15,7 +16,7 @@ import {
     TbChevronDown,
     TbChevronRight,
     TbLogout,
-    TbMenu2, TbMoon,
+    TbMenu2, TbMoon, TbPlus,
     TbSun,
     TbUserCircle
 } from "react-icons/tb";
@@ -27,6 +28,8 @@ import {useLogout} from "@/modules/auth/api/useLogout.ts";
 import {toastSuccess} from "@/shared/utils/toast.ts";
 import useTheme from "@/shared/hooks/useTheme.ts";
 import useMenus, {type MenuKeys} from "@/shared/hooks/useMenus.tsx";
+import {useDetailBusiness} from "@/modules/business/api/useDetailBusiness.ts";
+import useBusinesses from "@/modules/business/api/useBusinesses.ts";
 
 export default function MentorLayout({ children, pageTitle, menuActive }: PropsWithChildren & {
     pageTitle: string;
@@ -40,6 +43,8 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
 
     // define queries
     const profile = useProfile()
+    const business = useDetailBusiness()
+    const businesses = useBusinesses()
 
     // define mutations
     const logout = useLogout({
@@ -146,47 +151,87 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
                 <aside
                     className={'h-[calc(100vh_-_65px)] w-full p-3 relative border-r border-default-200 flex flex-col justify-between overflow-y-auto'}>
                     <div>
-                        <Popover
-                            backdrop="opaque"
-                            placement="bottom-start"
-                        >
-                            <PopoverTrigger>
-                                <Card
-                                    isPressable
-                                    className={cn(
-                                        'w-full text-left grid grid-cols-[1fr_auto] gap-2.5 items-center hover:bg-default-100 whitespace-nowrap rounded-lg p-3 font-medium relative group mt-3 mb-5',
-                                    )}
-                                >
-                                    <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
-                                        <div
-                                            className="w-full aspect-[1/1] flex items-center justify-center rounded-full overflow-hidden border">
-                                            <img src={'/img/logo-circle.png'} alt="business"/>
+
+                        {!business.isLoading && business.data ? (
+                            <Popover
+                                backdrop="opaque"
+                                placement="bottom-start"
+                            >
+                                <PopoverTrigger>
+                                    <Card
+                                        isPressable
+                                        className={cn(
+                                            'w-full text-left grid grid-cols-[1fr_auto] gap-2.5 items-center hover:bg-default-100 whitespace-nowrap rounded-lg p-3 font-medium relative group mt-3 mb-5',
+                                        )}
+                                    >
+                                        <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
+                                            { business.data.logoSrc ? (
+                                                <Avatar
+                                                    className="bg-transparent transition-transform rounded-full lg:w-[30px] lg:h-[30px]"
+                                                    src={business.data.logoSrc}
+                                                />
+                                            ) : (
+                                                <Avatar
+                                                    className="bg-transparent transition-transform rounded-full lg:w-[30px] lg:h-[30px]"
+                                                    src={`https://eu.ui-avatars.com/api/?name=${business.data.name}&size=250`}
+                                                />
+                                            ) }
+
+                                            {business.data.name}
                                         </div>
+                                        <div>
+                                            <TbChevronDown className="size-5"/>
+                                        </div>
+                                    </Card>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    className="rounded-lg w-full p-0 max-w-[500px] text-left max-h-[500px] items-start justify-start overflow-auto">
 
-                                        Tujuhub
+                                    <div className="p-3 pb-2 w-full font-medium">
+                                        My businesses
                                     </div>
-                                    <div>
-                                        <TbChevronDown className="size-5"/>
-                                    </div>
-                                </Card>
-                            </PopoverTrigger>
-                            <PopoverContent
-                                className="rounded-lg w-full p-0 max-w-[500px] text-left max-h-[500px] items-start justify-start overflow-auto">
 
-                                <Card isPressable onPress={() => {
+                                    {!businesses.isLoading && businesses.data ? (
+                                        <>
+                                            {businesses.data.items.map(business => (
+                                                <Card isPressable onPress={() => {
 
-                                }} className="p-3 border-none hover:bg-default-100 overflow-visible text-left rounded-lg w-full grid grid-cols-[30px_1fr] items-center gap-3 pe-24">
-                                    <div
-                                        className="w-full aspect-[1/1] flex items-center justify-center rounded-full overflow-hidden border">
-                                        <img src={'/img/logo-circle.png'} alt="tujuhub"/>
-                                    </div>
-                                    <div>
-                                        Tujuhub
-                                    </div>
-                                </Card>
+                                                }} key={business.id} className="p-3 border-none hover:bg-default-100 overflow-visible text-left rounded-none w-full grid grid-cols-[30px_1fr] items-center gap-3 pe-24">
+                                                    <div
+                                                        className="w-full aspect-[1/1] flex items-center justify-center rounded-full overflow-hidden border border-default-500">
+                                                        { business.logoSrc ? (
+                                                            <Avatar
+                                                                className="bg-transparent transition-transform rounded-full lg:w-[30px] lg:h-[30px]"
+                                                                src={business.logoSrc}
+                                                            />
+                                                        ) : (
+                                                            <Avatar
+                                                                className="bg-transparent transition-transform rounded-full lg:w-[30px] lg:h-[30px]"
+                                                                src={`https://eu.ui-avatars.com/api/?name=${business.name}&size=250`}
+                                                            />
+                                                        ) }
+                                                    </div>
+                                                    <div>
+                                                        {business.name}
+                                                    </div>
+                                                </Card>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <div><Spinner variant={'simple'}/></div>
+                                    )}
 
-                            </PopoverContent>
-                        </Popover>
+                                    <div className="p-3 w-full">
+                                        <Button fullWidth variant={'flat'} startContent={<TbPlus className={'size-4'}/>}>
+                                            Create new business
+                                        </Button>
+                                    </div>
+
+                                </PopoverContent>
+                            </Popover>
+                        ) : (
+                            <Skeleton className={'w-full h-[70px] rounded-xl'}/>
+                        )}
 
                         { menus.map((menu, i) => (
                             <Fragment key={i}>
