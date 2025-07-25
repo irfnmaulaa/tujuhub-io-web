@@ -1,12 +1,12 @@
-import MentorLayout from "@/modules/mentor/layouts/MentorLayout.tsx";
+import BusinessLayout from "@/shared/layouts/BusinessLayout.tsx";
 
 export default function ProductList() {
     return (
-        <MentorLayout
+        <BusinessLayout
             pageTitle={'E-Course'}
             menuActive={'course'}
         >
 
-        </MentorLayout>
+        </BusinessLayout>
     )
 }

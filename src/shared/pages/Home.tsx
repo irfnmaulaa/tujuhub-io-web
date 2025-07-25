@@ -1,6 +1,6 @@
 import useProfile from "@/modules/profile/api/useProfile.ts";
 import SuspenseFallback from "@/shared/pages/fallbacks/SuspenseFallback.tsx";
-import MentorLayout from "@/modules/mentor/layouts/MentorLayout.tsx";
+import BusinessLayout from "@/shared/layouts/BusinessLayout.tsx";
 
 export default function Home() {
     const profile = useProfile()
@@ -10,11 +10,11 @@ export default function Home() {
     }
 
     return (
-        <MentorLayout
+        <BusinessLayout
             pageTitle={'Dashboard'}
             menuActive={'dashboard'}
         >
 
-        </MentorLayout>
+        </BusinessLayout>
     )
 }

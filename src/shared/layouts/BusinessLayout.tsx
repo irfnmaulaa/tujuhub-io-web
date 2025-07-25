@@ -1,13 +1,12 @@
 import {
     Avatar,
-    Card,
     cn,
     Dropdown,
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
     Popover, PopoverContent,
-    PopoverTrigger, Skeleton, Spinner
+    PopoverTrigger, Skeleton, Spinner, useDisclosure
 } from "@heroui/react"
 import Button from "@/shared/design-system/button/Button.tsx";
 import {
@@ -30,8 +29,10 @@ import useTheme from "@/shared/hooks/useTheme.ts";
 import useMenus, {type MenuKeys} from "@/shared/hooks/useMenus.tsx";
 import {useDetailBusiness} from "@/modules/business/api/useDetailBusiness.ts";
 import useBusinesses from "@/modules/business/api/useBusinesses.ts";
+import Card from "@/shared/design-system/card/Card.tsx";
+import useCreateBusinessModal from "@/modules/business/hooks/useCreateBusinessModal.tsx";
 
-export default function MentorLayout({ children, pageTitle, menuActive }: PropsWithChildren & {
+export default function BusinessLayout({ children, pageTitle, menuActive }: PropsWithChildren & {
     pageTitle: string;
     menuActive: MenuKeys
 }) {
@@ -40,6 +41,10 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
     const personalInfo = usePersonalInfo()
     const navigate = useNavigate()
     const { menus } = useMenus()
+
+    // define modals
+    const businessDropdown = useDisclosure()
+    const createBusinessModal = useCreateBusinessModal()
 
     // define queries
     const profile = useProfile()
@@ -156,12 +161,14 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
                             <Popover
                                 backdrop="opaque"
                                 placement="bottom-start"
+                                isOpen={businessDropdown.isOpen}
+                                onOpenChange={businessDropdown.onOpenChange}
                             >
                                 <PopoverTrigger>
                                     <Card
                                         isPressable
                                         className={cn(
-                                            'w-full text-left grid grid-cols-[1fr_auto] gap-2.5 items-center hover:bg-default-100 whitespace-nowrap rounded-lg p-3 font-medium relative group mt-3 mb-5',
+                                            'w-full border border-default text-left grid grid-cols-[1fr_auto] gap-2.5 items-center hover:bg-default-100 whitespace-nowrap rounded-lg p-3 font-medium relative group mt-3 mb-5',
                                         )}
                                     >
                                         <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
@@ -195,7 +202,8 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
                                         <>
                                             {businesses.data.items.map(business => (
                                                 <Card isPressable onPress={() => {
-
+                                                    navigate(`/${business.id}`)
+                                                    businessDropdown.onClose()
                                                 }} key={business.id} className="p-3 border-none hover:bg-default-100 overflow-visible text-left rounded-none w-full grid grid-cols-[30px_1fr] items-center gap-3 pe-24">
                                                     <div
                                                         className="w-full aspect-[1/1] flex items-center justify-center rounded-full overflow-hidden border border-default-500">
@@ -222,7 +230,10 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
                                     )}
 
                                     <div className="p-3 w-full">
-                                        <Button fullWidth variant={'flat'} startContent={<TbPlus className={'size-4'}/>}>
+                                        <Button fullWidth variant={'flat'} startContent={<TbPlus className={'size-4'}/>} onPress={() => {
+                                            createBusinessModal.onOpen()
+                                            businessDropdown.onClose()
+                                        }}>
                                             Create new business
                                         </Button>
                                     </div>
@@ -230,10 +241,99 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
                                 </PopoverContent>
                             </Popover>
                         ) : (
-                            <Skeleton className={'w-full h-[70px] rounded-xl'}/>
+                            <Skeleton className={'w-full h-[55px] rounded-lg mt-3 mb-5'}/>
                         )}
 
-                        { menus.map((menu, i) => (
+                        { menus.filter(menu => !menu.isBottomMenu).map((menu, i) => (
+                            <div key={i}>
+                                { menu.children ? (
+                                    <div key={menu.path}>
+                                        <input type="checkbox" id={`sidebar-menu-${i}`}
+                                               className="sidebar-menu-checkbox hidden"
+                                               defaultChecked={Boolean(menu.children.find(menu => menu.menuActive === menuActive))}
+                                        />
+                                        <label
+                                            htmlFor={`sidebar-menu-${i}`}
+                                            className={cn(
+                                                'w-full cursor-pointer grid select-none gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                                menu.children.find(menu => menu.menuActive === menuActive) && 'bg-default-100 text-default-800 font-bold',
+                                                'grid-cols-[1fr_auto]'
+                                            )}
+                                        >
+                                            <div className="grid grid-cols-[30px_1fr] gap-2.5 items-center">
+                                                <div
+                                                    className="w-full aspect-[1/1] flex items-center justify-center">
+                                                    {menu.children.find(menu => menu.menuActive === menuActive) ? (
+                                                        <>{menu.iconOnActive}</>
+                                                    ) : (
+                                                        <>{menu.iconOnInactive}</>
+                                                    )}
+                                                </div>
+
+                                                {menu.label}
+                                            </div>
+                                            <div>
+                                                <TbChevronRight
+                                                    className="size-5 sidebar-icon transition duration-200 ease-in-out"/>
+                                            </div>
+                                        </label>
+
+                                        <div className="sidebar-sub-menu">
+                                            <div className={cn('overflow-hidden ms-6 border-l border-default-200')}>
+                                                { menu.children.map((menu) => (
+                                                    <NavLink
+                                                        key={menu.path}
+                                                        to={menu.path}
+                                                        className={cn(
+                                                            'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                                            menu.menuActive === menuActive && 'text-default-800 font-semibold'
+                                                        )}
+                                                    >
+                                                        <div
+                                                            className="w-full aspect-[1/1] flex items-center justify-center">
+                                                            {menu.menuActive === menuActive ? (
+                                                                <>{menu.iconOnActive}</>
+                                                            ) : (
+                                                                <>{menu.iconOnInactive}</>
+                                                            )}
+                                                        </div>
+
+                                                        {menu.label}
+                                                    </NavLink>
+                                                )) }
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div key={menu.path}>
+                                        <NavLink
+                                            to={menu.path}
+                                            className={cn(
+                                                'w-full grid grid-cols-[30px_1fr] gap-2.5 items-center hover:bg-default-100 rounded-lg px-3 py-2 text-default-500 relative group tracking-[0.2px]',
+                                                menu.menuActive === menuActive && 'bg-default-100 text-default-800 font-bold'
+                                            )}
+                                        >
+                                            <div
+                                                className="w-full aspect-[1/1] flex items-center justify-center">
+                                                {menu.menuActive === menuActive ? (
+                                                    <>{menu.iconOnActive}</>
+                                                ) : (
+                                                    <>{menu.iconOnInactive}</>
+                                                )}
+                                            </div>
+
+                                            {menu.label}
+                                        </NavLink>
+                                    </div>
+                                ) }
+                            </div>
+                        )) }
+
+                    </div>
+
+                    <div>
+                    {/*  menu bottom  */}
+                        { menus.filter(menu => menu.isBottomMenu).map((menu, i) => (
                             <Fragment key={i}>
                                 { menu.children ? (
                                     <div key={menu.path}>
@@ -317,11 +417,6 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
                                 ) }
                             </Fragment>
                         )) }
-
-                    </div>
-
-                    <div>
-                    {/*  menu bottom  */}
                     </div>
                 </aside>
                 {/* E: Sidebar */}
@@ -340,6 +435,11 @@ export default function MentorLayout({ children, pageTitle, menuActive }: PropsW
                 {/* E: Main */}
 
             </div>
+
+
+            {/* S: Modals */}
+            {createBusinessModal.Element}
+            {/* E: Modals */}
         </div>
     )
 }

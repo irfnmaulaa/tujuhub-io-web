@@ -1,14 +1,19 @@
-import {Avatar, Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton} from "@heroui/react";
+import {Avatar, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Skeleton} from "@heroui/react";
 import {TbLogout, TbPlus, TbUserCircle} from "react-icons/tb";
 import {NavLink, useNavigate} from "react-router-dom";
 import Button from "@/shared/design-system/button/Button.tsx";
 import useProfile from "@/modules/profile/api/useProfile.ts";
 import useBusinesses from "@/modules/business/api/useBusinesses.ts";
+import Card from "@/shared/design-system/card/Card.tsx";
+import useCreateBusinessModal from "@/modules/business/hooks/useCreateBusinessModal.tsx";
 
 export default function SelectBusiness() {
 
     // define hooks
     const navigate = useNavigate()
+
+    // define modals
+    const createBusinessModal = useCreateBusinessModal()
 
     // define queries
     const profile = useProfile()
@@ -84,11 +89,15 @@ export default function SelectBusiness() {
                         </>
                     )}
 
-                    <Button fullWidth size={'lg'} variant={'flat'} className={'mt-3'} startContent={<TbPlus className={'size-5'}/>}>
+                    <Button fullWidth size={'lg'} variant={'light'} className={'mt-3'} startContent={<TbPlus className={'size-5'}/>} onPress={() => {
+                        createBusinessModal.onOpen()
+                    }}>
                         Create new business
                     </Button>
                 </div>
             </div>
+
+            {createBusinessModal.Element}
         </div>
     )
 }

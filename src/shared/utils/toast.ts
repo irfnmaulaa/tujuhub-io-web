@@ -1,42 +1,40 @@
-import toast, {type ToastOptions} from "react-hot-toast";
+import {addToast, closeAll} from "@heroui/toast";
 
-const toastConfig: Partial<ToastOptions> = {
-    position: 'top-center'
-}
-
-export const toastLoading = (message: string, options?: ToastOptions & {dismissBefore: boolean}) => {
+export const toastSuccess = (message: string, options?: {dismissBefore: boolean}) => {
     if(options?.dismissBefore) {
         toastDismiss()
     }
-    return toast.loading(message, { ...toastConfig, ...options })
+    return addToast({
+        title: message,
+        color: 'success',
+        variant: 'solid',
+
+    })
 }
 
-export const toastSuccess = (message: string, options?: ToastOptions & {dismissBefore: boolean}) => {
+export const toastInfo = (message: string, options?: {dismissBefore: boolean}) => {
     if(options?.dismissBefore) {
         toastDismiss()
     }
-    return toast.success(message, { ...toastConfig, ...options })
-}
-
-export const toastInfo = (message: string, options?: ToastOptions & {dismissBefore: boolean}) => {
-    if(options?.dismissBefore) {
-        toastDismiss()
-    }
-    return toast(message, {
-        icon: 'ℹ️',
-        ...toastConfig,
-        ...options,
+    return addToast({
+        title: message,
+        color: 'secondary',
+        variant: 'solid'
     })
 }
 
 
-export const toastError = (message: string, options?: ToastOptions & {dismissBefore: boolean}) => {
+export const toastError = (message: string, options?: {dismissBefore: boolean}) => {
     if(options?.dismissBefore) {
         toastDismiss()
     }
-    return toast.error(message, { ...toastConfig, ...options })
+    return addToast({
+        title: message,
+        color: 'danger',
+        variant: 'solid'
+    })
 }
 
-export const toastDismiss = (toastId?: string) => {
-    return toast.dismiss(toastId)
+export const toastDismiss = () => {
+    closeAll()
 }

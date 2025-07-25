@@ -1,11 +1,7 @@
 import { useMutation as useReactMutation, type UseMutationOptions as UseReactMutationOptions } from 'react-query';
 import type {AxiosError} from "axios";
 import {toastError} from "@/shared/utils/toast.ts";
-
-type ApiError = {
-    status: string;
-    message: string;
-}
+import type {ApiError} from "@/shared/types/api-response.ts";
 
 export type UseMutationOptions<Input, Output> = UseReactMutationOptions<Output, AxiosError<ApiError>, Input>
 

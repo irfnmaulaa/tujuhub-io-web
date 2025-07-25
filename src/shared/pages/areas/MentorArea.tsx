@@ -13,5 +13,9 @@ export default function MentorArea() {
         return <Navigate to={'/sign-in'}/>
     }
 
-    return (<Outlet/>)
+    return (
+        <>
+            <Outlet/>
+        </>
+    )
 }

@@ -12,7 +12,7 @@ export function useDetailBusiness(opts?: UseQueryOptions<Output>) {
     const {businessId} = useParams()
 
     return useQuery<Output>({
-        queryKey: ['DetailBusiness'],
+        queryKey: ['DetailBusiness', businessId],
         queryFn: async (data) => {
             const response = await Axios.get(`/api/businesses/${businessId}`, data);
             return response.data.data.business;

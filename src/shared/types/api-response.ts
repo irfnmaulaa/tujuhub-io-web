@@ -36,3 +36,18 @@ export type ApiResponseError<D=null> = {
     message: string;
     errors?: D;
 }
+
+export type ApiError = {
+    status: string;
+    message: string;
+    errors?: {[field: string]: string};
+}
+
+export type EditInput<D> = {
+    id: string;
+    data: D;
+}
+
+export type DeleteInput = {
+    id: string;
+}

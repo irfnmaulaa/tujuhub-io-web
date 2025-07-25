@@ -1,17 +1,17 @@
 import type {JSX} from "react";
 import {useParams} from "react-router-dom";
 import {
-    TbAd2,
+    TbAd2, TbAutomaticGearbox,
     TbBox,
     TbBoxMultiple,
-    TbBoxMultipleFilled,
+    TbBoxMultipleFilled, TbBrandParsinta,
     TbBuildingStore,
     TbCalendarEvent,
     TbChartBar,
     TbCreditCardPay,
     TbDeviceImac,
     TbDiscount,
-    TbDiscountFilled, TbForms,
+    TbDiscountFilled, TbFiles, TbForms,
     TbLayoutGrid,
     TbLayoutGridFilled,
     TbPlayerPlayFilled, TbSettings, TbShieldCheck,
@@ -30,6 +30,7 @@ type Menu = {
     iconOnInactive: JSX.Element;
     isBottomMenu?: boolean;
     children?: Menu[]
+    isNew?: boolean;
 }
 
 export type MenuKeys =
@@ -102,6 +103,13 @@ const useMenus = () => {
                     iconOnActive: <TbCreditCardPay className="size-6"/>,
                     iconOnInactive: <TbCreditCardPay className="size-6"/>,
                 },
+                {
+                    label: 'Bundle',
+                    path: `/${businessId}/bundles`,
+                    menuActive: 'membership',
+                    iconOnActive: <TbFiles className="size-6"/>,
+                    iconOnInactive: <TbFiles className="size-6"/>,
+                },
             ]
         },
         {
@@ -112,35 +120,28 @@ const useMenus = () => {
             iconOnInactive: <TbBuildingStore className="size-6"/>,
             children: [
                 {
-                    label: 'Reports',
-                    path: `/${businessId}/reports`,
-                    menuActive: 'report',
-                    iconOnActive: <TbChartBar className="size-6"/>,
-                    iconOnInactive: <TbChartBar className="size-6"/>,
-                },
-                {
-                    label: 'Pricings',
-                    path: `/${businessId}/pricings`,
-                    menuActive: 'pricing',
-                    iconOnActive: <TbTagFilled className="size-6"/>,
-                    iconOnInactive: <TbTag className="size-6"/>,
-                },
-                {
-                    label: 'Landing-Pages',
+                    label: 'Landing Page',
                     path: `/${businessId}/landing-pages`,
                     menuActive: 'landing-page',
                     iconOnActive: <TbDeviceImac className="size-6"/>,
                     iconOnInactive: <TbDeviceImac className="size-6"/>,
                 },
                 {
-                    label: 'Transactions',
+                    label: 'Pricing',
+                    path: `/${businessId}/pricings`,
+                    menuActive: 'pricing',
+                    iconOnActive: <TbTagFilled className="size-6"/>,
+                    iconOnInactive: <TbTag className="size-6"/>,
+                },
+                {
+                    label: 'Transaction',
                     path: `/${businessId}/transactions/completed`,
                     menuActive: 'transaction',
                     iconOnActive: <TbShoppingCartFilled className="size-6"/>,
                     iconOnInactive: <TbShoppingCart className="size-6"/>,
                 },
                 {
-                    label: 'Customers',
+                    label: 'Customer',
                     path: `/${businessId}/customers`,
                     menuActive: 'customer',
                     iconOnActive: <TbUsers className="size-6"/>,
@@ -164,17 +165,32 @@ const useMenus = () => {
 
                 },
                 {
-                    label: 'Ads',
+                    label: 'Ad',
                     path: `/${businessId}/ads`,
                     menuActive: 'ad',
                     iconOnActive: <TbAd2 className="size-6"/>,
                     iconOnInactive: <TbAd2 className="size-6"/>,
 
                 },
+                {
+                    label: 'Report',
+                    path: `/${businessId}/reports`,
+                    menuActive: 'report',
+                    iconOnActive: <TbChartBar className="size-6"/>,
+                    iconOnInactive: <TbChartBar className="size-6"/>,
+                },
             ]
         },
         {
-            label: 'Settings',
+            label: 'Automation',
+            path: `/${businessId}/settings`,
+            menuActive: 'settings',
+            iconOnActive: <TbAutomaticGearbox className="size-6"/>,
+            iconOnInactive: <TbAutomaticGearbox className="size-6"/>,
+            isNew: true,
+        },
+        {
+            label: 'Setting',
             path: `/${businessId}/settings`,
             menuActive: 'settings',
             iconOnActive: <TbSettings className="size-6"/>,
@@ -215,6 +231,14 @@ const useMenus = () => {
 
                 },
             ]
+        },
+        {
+            label: 'Tutorial',
+            path: `/${businessId}/settings`,
+            menuActive: 'settings',
+            iconOnActive: <TbBrandParsinta className="size-6"/>,
+            iconOnInactive: <TbBrandParsinta className="size-6"/>,
+            isBottomMenu: true,
         },
     ]
 

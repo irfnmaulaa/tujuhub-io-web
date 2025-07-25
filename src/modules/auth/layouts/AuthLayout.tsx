@@ -6,7 +6,7 @@ export default function AuthLayout({ children }: React.PropsWithChildren) {
         <>
             <div className="flex flex-col py-20 items-center gap-4 lg:gap-8 max-w-[450px] px-6 mx-auto min-h-[calc(100vh_-_60px)]">
                 <NavLink to={'/'}>
-                    <img src={`/img/logo.png`} alt="tujuhub logo" className="h-[50px]"/>
+                    <img src={`/img/logo.png`} alt="tujuhub logo" className="h-[50px] logo"/>
                 </NavLink>
                 {children}
             </div>
