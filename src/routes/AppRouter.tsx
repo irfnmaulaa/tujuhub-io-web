@@ -1,6 +1,4 @@
-import {useEffect} from "react";
-import {useSearchParams} from "react-router-dom";
-import {useRoutes} from 'react-router-dom'
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Home from "@/shared/pages/Home.tsx";
 import LoginPage from "@/modules/auth/pages/LoginPage.tsx";
 import MentorArea from "@/shared/pages/areas/MentorArea.tsx";
@@ -9,13 +7,14 @@ import BusinessArea from "@/shared/pages/areas/BusinessArea.tsx";
 import SelectBusiness from "@/shared/pages/SelectBusiness.tsx";
 import CourseList from "@/modules/product/pages/CourseList.tsx";
 
-const routes = [
+
+const routes = createBrowserRouter([
     {
         path: '/',
         element: <MentorArea/>,
         children: [
             {
-                path: '',
+                index: true,
                 element: <SelectBusiness/>
             },
             {
@@ -44,19 +43,10 @@ const routes = [
             },
         ]
     },
-]
+])
 
 export default function AppRouter() {
-    const [query] = useSearchParams()
-
-    useEffect(() => {
-        if(query.get('sctoken')) {
-            localStorage.setItem('__sctoken', query.get('sctoken') || '')
-            const url = new URL(window.location.href)
-            url.searchParams.delete('sctoken')
-            window.location.href = url.toString()
-        }
-    }, [query]);
-
-    return useRoutes(routes)
+    return (
+        <RouterProvider router={routes}/>
+    )
 }

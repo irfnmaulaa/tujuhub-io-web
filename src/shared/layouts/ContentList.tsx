@@ -2,16 +2,17 @@ import Button from "@/shared/design-system/button/Button.tsx";
 import {Divider, Tooltip} from "@heroui/react";
 import {cx} from "class-variance-authority";
 
-import SimpleAddFilters, {type Filter} from "@/shared/components/filter/SimpleAddFilters.tsx";
+import {type Filter} from "@/shared/components/filter/SimpleAddFilters.tsx";
 import type {SortByItem} from "@/shared/components/sort-by/SimpleSortBy.tsx";
 import SimpleSearch from "@/shared/components/search/SimpleSearch.tsx";
 import SimplePagination from "@/shared/components/pagination/SimplePagination.tsx";
 
 import type {PaginationResponse} from "@/shared/types/api-response";
 import useResponsive from "@/shared/hooks/useResponsive.ts";
-import {TbArrowLeft} from "react-icons/tb";
+import {TbArrowLeft, TbFilter} from "react-icons/tb";
 import {NavLink, useParams} from "react-router-dom";
-import type { JSX } from "react";
+import {type JSX} from "react";
+import {FilterElement, useFilter} from "@/shared/hooks/useFilter.tsx";
 
 export type DisplayMode = {
     key: string;
@@ -39,9 +40,11 @@ export default function ContentList({ slotStart, isSticky = true, stickyTop = 53
 }) {
     const {slug} = useParams()
     const {isInDesktop} = useResponsive()
+
+    const filter = useFilter()
+
     return (
         <div className="flex flex-col gap-3 lg:gap-0">
-
             {/* S: Title and Actions */}
             { title && (
                 <>
@@ -82,7 +85,16 @@ export default function ContentList({ slotStart, isSticky = true, stickyTop = 53
                 <div className={'w-full grid grid-cols-[auto_1fr_auto] gap-2'}>
                     <div>
                         { filters && filters.length > 0 && (
-                            <SimpleAddFilters filters={filters}/>
+                            <>
+                                <Button startContent={<TbFilter className={'size-5'}/>} variant={'flat'} color={'default'} onPress={() => {
+                                    filter.onOpen()
+                                }} endContent={<div>
+
+                                </div>} isIconOnly={!isInDesktop}>
+                                    { isInDesktop ? 'Filter' : '' }
+                                </Button>
+                                <FilterElement control={filter} filters={filters}/>
+                            </>
                         ) }
                     </div>
                     <SimpleSearch/>

@@ -1,5 +1,4 @@
 import {StrictMode, Suspense, useEffect, useRef} from "react";
-import {BrowserRouter} from "react-router-dom";
 import { QueryClientProvider, QueryErrorResetBoundary } from "react-query";
 import { ErrorBoundary } from "react-error-boundary";
 import {cn, HeroUIProvider, ToastProvider} from "@heroui/react";
@@ -29,22 +28,20 @@ function App() {
     return (
         <StrictMode>
             <div className={cn('text-foreground bg-background')}>
-                <BrowserRouter>
-                    <QueryErrorResetBoundary>
-                        {({ reset }) => (
-                            <ErrorBoundary onReset={reset} FallbackComponent={Fallback}>
-                                <Suspense fallback={<SuspenseFallback/>}>
-                                    <HeroUIProvider>
-                                        <ToastProvider placement={'top-center'}/>
-                                        <QueryClientProvider client={queryClient}>
-                                            <AppRouter/>
-                                        </QueryClientProvider>
-                                    </HeroUIProvider>
-                                </Suspense>
-                            </ErrorBoundary>
-                        )}
-                    </QueryErrorResetBoundary>
-                </BrowserRouter>
+                <QueryErrorResetBoundary>
+                    {({ reset }) => (
+                        <ErrorBoundary onReset={reset} FallbackComponent={Fallback}>
+                            <Suspense fallback={<SuspenseFallback/>}>
+                                <HeroUIProvider>
+                                    <ToastProvider placement={'top-center'}/>
+                                    <QueryClientProvider client={queryClient}>
+                                        <AppRouter/>
+                                    </QueryClientProvider>
+                                </HeroUIProvider>
+                            </Suspense>
+                        </ErrorBoundary>
+                    )}
+                </QueryErrorResetBoundary>
             </div>
         </StrictMode>
     )

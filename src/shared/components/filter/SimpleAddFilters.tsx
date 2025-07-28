@@ -242,6 +242,7 @@ export default function SimpleAddFilters({ filters }: {
                                                         const keyIndex = newState.findIndex(key => key.key === selectedFilter?.key)
                                                         if(keyIndex > -1) {
                                                             const valueIndex = newState[keyIndex].values.findIndex(val => val.key === choice.key)
+                                                            console.log(newState[keyIndex])
                                                             newState[keyIndex].values = valueIndex > -1 ? newState[keyIndex].values.filter(val => val.key !== choice.key) : [...newState[keyIndex].values, choice]
                                                         } else {
                                                             newState.push({

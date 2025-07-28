@@ -12,7 +12,7 @@ export function useMutation<Input, Output>(
         ...options,
         onError: async (...error) => {
             const data = error[0].response?.data
-            toastError(`${data?.status.toUpperCase() }: ${data?.message||'Something gone wrong, please try again!'}`, {dismissBefore: true, position: 'top-center'})
+            toastError(`${data?.status.toUpperCase() }: ${data?.message||'Something gone wrong, please try again!'}`, {dismissBefore: true})
             await options?.onError?.(...error)
         }
     });

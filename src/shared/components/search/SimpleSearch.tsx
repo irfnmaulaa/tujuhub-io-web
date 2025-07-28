@@ -1,9 +1,8 @@
-import {TbSearch, TbX} from "react-icons/tb";
+import {TbSearch} from "react-icons/tb";
 import TextField from "@/shared/design-system/form/TextField.tsx";
 import {useForm} from "react-hook-form";
 import {useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import Button from "@/shared/design-system/button/Button.tsx";
 
 export default function SimpleSearch(props?: {
     label?: string;
@@ -12,7 +11,6 @@ export default function SimpleSearch(props?: {
 
     // search
     const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout>()
-    const [isCleared, setIsCleared] = useState(true)
 
     // search form
     const searchForm = useForm<{ search: string }>()
@@ -42,34 +40,35 @@ export default function SimpleSearch(props?: {
                         query.delete('page')
                         query.set('search', value)
                         setQuery(query)
-                        setIsCleared(false)
                     }
                 }, 500))
             }}
-            endContent={<>
-                { (searchValue || !isCleared) && (
-                   <>
-                       <Button
-                           isIconOnly
-                           radius="full"
-                           variant="light"
-                           size="sm"
-                           onPress={() => {
-                               query.set('search', '')
-                               setQuery(query)
-                               searchForm.setValue('search', '')
-                               setIsCleared(true)
-                           }}
-                       >
-                           <TbX className="size-4"/>
-                       </Button>
-                   </>
-                ) }
-            </>}
             variant={'underlined'}
             classNames={{
                 innerWrapper: 'pb-0',
                 inputWrapper: 'border-none shadow-none'
+            }}
+            onBlur={() => {
+                if(searchValue === '') {
+                    query.set('search', '')
+                    setQuery(query)
+                    searchForm.setValue('search', '')
+                }
+            }}
+            onKeyDown={(e) => {
+                if(e.key === 'Enter') {
+                    if(searchValue === '') {
+                        query.set('search', '')
+                        setQuery(query)
+                        searchForm.setValue('search', '')
+                    }
+                }
+            }}
+            isClearable
+            onClear={() => {
+                query.set('search', '')
+                setQuery(query)
+                searchForm.setValue('search', '')
             }}
         />
     )

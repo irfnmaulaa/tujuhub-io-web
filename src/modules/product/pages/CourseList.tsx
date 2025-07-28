@@ -136,7 +136,7 @@ export default function CourseList() {
                                             {/* S: Thumbnail */}
                                             <div>
                                                 <NavLink to={`/${businessId}/courses/${item.id}/overview`}
-                                                         className={'aspect-[1460/752] w-[115px] flex items-center justify-center rounded-lg overflow-hidden bg-default-100'}>
+                                                         className={'aspect-[16/9] h-[60px] flex items-center justify-center rounded-lg overflow-hidden bg-default-100'}>
                                                     {item.thumbnailSrc ? (
                                                         <img src={item.thumbnailSrc} alt="banner"
                                                              className={'w-full h-full object-cover object-center'}/>
@@ -282,7 +282,7 @@ export default function CourseList() {
                     </div>}
                     filters={[
                         {
-                            key: 'is_published',
+                            key: 'isPublished',
                             label: 'Status',
                             type: 'choices',
                             choices: [
