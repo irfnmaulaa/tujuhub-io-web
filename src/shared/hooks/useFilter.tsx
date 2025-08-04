@@ -1,5 +1,5 @@
-import {type JSX, useEffect, useState} from "react";
-import {useDisclosure, type UseDisclosureProps} from "@heroui/react";
+import {type JSX, useState} from "react";
+import {ButtonGroup, useDisclosure, type UseDisclosureProps} from "@heroui/react";
 import {ModalElement} from "@/shared/hooks/useModal.tsx";
 import Button from "@/shared/design-system/button/Button.tsx";
 import {useSearchParams} from "react-router-dom";
@@ -65,7 +65,7 @@ export function FilterElement({ control, filters }: {
             footer={<div className={'flex w-full justify-between mt-5'}>
                 <div>
                     { Object.values(appliedFilters).flat().length > 0 && (
-                        <Button variant={'light'} color={'danger'} size={'lg'} onPress={() => {
+                        <Button variant={'bordered'} color={'danger'} size={'lg'} onPress={() => {
                             setAppliedFilters({})
                         }}>
                             Reset to default
@@ -89,8 +89,8 @@ export function FilterElement({ control, filters }: {
                     {filter.type === 'choices' ? (
                         <>
                             <div className={'mb-1.5'}>{filter.label}</div>
-                            <div className="flex gap-2">
-                                <Button color={(!appliedFilters[filter.key] || appliedFilters[filter.key].length <= 0) ? 'primary' : 'default'} variant={'flat'} radius={'full'} onPress={() => {
+                            <ButtonGroup>
+                                <Button color={(!appliedFilters[filter.key] || appliedFilters[filter.key].length <= 0) ? 'primary' : 'default'} variant={'flat'} onPress={() => {
                                     setAppliedFilters(prevState => {
                                         if(prevState[filter.key]) {
                                             return {
@@ -105,14 +105,14 @@ export function FilterElement({ control, filters }: {
                                 </Button>
                                 {filter.choices?.map(choice => {
                                     return (
-                                        <Button color={appliedFilters[filter.key]?.find(val => val.key === choice.key) ? 'primary' : 'default'} variant={'flat'} radius={'full'} onPress={() => {
+                                        <Button color={appliedFilters[filter.key]?.find(val => val.key === choice.key) ? 'primary' : 'default'} variant={'flat'} onPress={() => {
                                             updateFilter(filter, choice)
                                         }}>
                                             {choice.label}
                                         </Button>
                                     )
                                 })}
-                            </div>
+                            </ButtonGroup>
                         </>
                     ) : (
                         <div></div>

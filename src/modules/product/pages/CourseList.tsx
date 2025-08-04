@@ -8,7 +8,6 @@ import {
     TbList,
     TbPencilBolt,
     TbPlus,
-    TbSchool,
     TbTrash, TbUpload,
     TbX
 } from "react-icons/tb";
@@ -21,10 +20,11 @@ import {CardBody, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigge
 import {NavLink, useParams} from "react-router-dom";
 import Card from "@/shared/design-system/card/Card.tsx";
 import useDate from "@/shared/hooks/useDate.ts";
-import useCreateProductModal from "@/modules/product/hooks/useCreateProductModal.tsx";
+import useAddProductModal from "@/modules/product/hooks/useAddProductModal.tsx";
 import useEditProductModal from "@/modules/product/hooks/useEditProductModal.tsx";
 import useDeleteProductModal from "@/modules/product/hooks/useDeleteProductModal.tsx";
 import useBulkProductAction from "@/modules/product/hooks/useBulkProductAction.tsx";
+import Image from "@/shared/design-system/image/Image.tsx";
 
 const displayModes = [
     {
@@ -55,7 +55,7 @@ export default function CourseList() {
     // define mutations
 
     // define modals
-    const createProductModal = useCreateProductModal()
+    const createProductModal = useAddProductModal()
     const editProductModal = useEditProductModal()
     const deleteProductModal = useDeleteProductModal()
     const bulkAction = useBulkProductAction()
@@ -116,7 +116,7 @@ export default function CourseList() {
                                 }, 
                                 {
                                     key: 'updatedAt',
-                                    label: 'Last Edited',
+                                    label: 'Last Updated',
                                     size: 1,
                                     isSortable: true,
                                 },
@@ -135,14 +135,12 @@ export default function CourseList() {
 
                                             {/* S: Thumbnail */}
                                             <div>
-                                                <NavLink to={`/${businessId}/courses/${item.id}/overview`}
-                                                         className={'aspect-[16/9] h-[60px] flex items-center justify-center rounded-lg overflow-hidden bg-default-100'}>
-                                                    {item.thumbnailSrc ? (
-                                                        <img src={item.thumbnailSrc} alt="banner"
-                                                             className={'w-full h-full object-cover object-center'}/>
-                                                    ) : (
-                                                        <TbSchool className={'size-7 text-default-300'}/>
-                                                    )}
+                                                <NavLink to={`/${businessId}/courses/${item.id}/overview`}>
+                                                    <Image
+                                                        src={item.thumbnailSrc || ''}
+                                                        radius={'lg'}
+                                                        className={'aspect-[16/9] h-[60px]'}
+                                                    />
                                                 </NavLink>
                                             </div>
                                             {/* E: Thumbnail */}
@@ -210,7 +208,7 @@ export default function CourseList() {
                                         </div>
                                     ),
                                 },
-                                updated_at: {
+                                updatedAt: {
                                     value: <div
                                         className={'font-light text-default-500 text-sm pt-0.5'}>{date.create(item.updatedAt || item.createdAt).format('D MMM YYYY')}</div>,
                                 },

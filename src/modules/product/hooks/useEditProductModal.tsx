@@ -5,17 +5,28 @@ import TextArea from "@/shared/design-system/form/TextArea.tsx";
 import {useForm} from "react-hook-form";
 import {productUpdateSchema, type ProductUpdateSchema} from "@/modules/product/schema/product-schema.ts";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Form, Switch} from "@heroui/react";
+import {Switch} from "@heroui/react";
 import {useUpdateProduct} from "@/modules/product/api/useUpdateProduct.ts";
 import {setFormError} from "@/shared/utils/error.ts";
 import {toastSuccess} from "@/shared/utils/toast.ts";
 import useCourses from "@/modules/product/api/useCourses.ts";
 import {useEffect, useState} from "react";
 import type {ProductItem} from "@/modules/product/types/product-type.ts";
+import Form from "@/shared/design-system/form/Form.tsx";
+import NumberField from "@/shared/design-system/form/NumberField.tsx";
+import useUploadImage from "@/shared/hooks/useUploadImage.tsx";
+import useUploadFile from "@/modules/aws/hooks/useUploadFile.ts";
 
 export default function useEditProductModal(props?: {
     onSuccess?: () => void;
 }) {
+
+    // define hooks
+    const thumbnailImage = useUploadImage({
+        label: 'Thumbnail',
+        info: '900 x 600'
+    })
+    const uploadFile = useUploadFile()
 
     // define state
     const modal = useModal()
@@ -30,6 +41,7 @@ export default function useEditProductModal(props?: {
     // forms
     const title = form.watch('title')
     const summary = form.watch('summary')
+    const price = form.watch('price')
     const isPublished = form.watch('isPublished')
     const { errors } = form.formState
 
@@ -52,12 +64,22 @@ export default function useEditProductModal(props?: {
     // define actions: onSubmit
     const onSubmit = async (data: ProductUpdateSchema) => {
         if(item) {
+
+            if(thumbnailImage.firstFile) {
+                data.thumbnailSrc = await uploadFile.put({
+                    file: thumbnailImage.firstFile,
+                })
+            }
+
             await updateProduct.mutateAsync({
                 data,
                 id: item.id,
             })
         }
     }
+
+    // computed: isPageLoading
+    const isPageLoading = updateProduct.isLoading || uploadFile.isLoading
 
     useEffect(() => {
         if(item) {
@@ -66,22 +88,29 @@ export default function useEditProductModal(props?: {
             })
             form.setValue('summary', item.summary || '')
             form.setValue('isPublished', Boolean(item.isPublished))
+            thumbnailImage.setPreview(item.thumbnailSrc || '')
         }
     }, [item]);
+
+    useEffect(() => {
+        if(!modal.isOpen) {
+            thumbnailImage.reset()
+        }
+    }, [modal.isOpen]);
 
     // define element
     const Element = item && (
         <ModalElement
             control={modal}
             header={`Quick edit`}
-            footer={<div>
+            footer={<>
                 <Button variant={'flat'} color={'default'} onPress={modal.onClose}>
                     Cancel
                 </Button>
-                <Button type={'submit'} form={'app-form'} isLoading={updateProduct.isLoading}>
+                <Button type={'submit'} form={'app-form'} isLoading={isPageLoading}>
                     Save
                 </Button>
-            </div>}
+            </>}
         >
             <Form id={'app-form'} onSubmit={form.handleSubmit(onSubmit)}>
                 <TextField
@@ -90,7 +119,7 @@ export default function useEditProductModal(props?: {
                     {...form.register('title')}
                     isInvalid={!!errors.title}
                     errorMessage={errors.title?.message}
-                    isDisabled={updateProduct.isLoading}
+                    isDisabled={isPageLoading}
                 />
                 <TextArea
                     label={`About ${item.productType || 'product'}`}
@@ -98,9 +127,20 @@ export default function useEditProductModal(props?: {
                     {...form.register('summary')}
                     isInvalid={!!errors.summary}
                     errorMessage={errors.summary?.message}
-                    isDisabled={updateProduct.isLoading}
+                    isDisabled={isPageLoading}
                 />
-                <Switch isSelected={isPublished} onValueChange={val => form.setValue('isPublished', val)}>
+                <NumberField
+                    label={`Initial Price`}
+                    value={price}
+                    onValueChange={number => form.setValue('price', number)}
+                    isInvalid={!!errors.price}
+                    errorMessage={errors.price?.message}
+                    isDisabled={isPageLoading}
+                />
+
+                {thumbnailImage.Element}
+
+                <Switch isDisabled={isPageLoading} isSelected={isPublished} onValueChange={val => form.setValue('isPublished', val)}>
                     Publish
                 </Switch>
             </Form>

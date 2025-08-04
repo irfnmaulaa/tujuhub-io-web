@@ -18,7 +18,7 @@ export default function SimplePagination({ data, isLoading = false, size = 'lg' 
             {/* S: Pagination */}
             {data ? (
                 <div className="flex justify-between gap-3 lg:flex-row flex-col-reverse items-center">
-                    <div className="text-sm text-gray-500">Displaying <span className="font-semibold text-primary">{ data.filtered.count }</span> out of <span className="font-semibold text-primary">{ displayFriendlyNumber(data.total_count) }</span></div>
+                    <div className="text-sm text-default-500">Displaying <span className="font-bold">{ data.filtered.count }</span> out of <span className="font-bold">{ displayFriendlyNumber(data.total_count) }</span></div>
                     { data.pages_count > 1 && (
                         <div className="flex items-center">
                             <Dropdown placement="top">
@@ -44,9 +44,9 @@ export default function SimplePagination({ data, isLoading = false, size = 'lg' 
                                     }
                                 }}>
                                     <DropdownItem key="newest"
-                                                  className={cn(data.request.page <= 1 && 'bg-gray-100')}>Newest</DropdownItem>
+                                                  className={cn(data.request.page <= 1 && 'bg-default-100')}>Newest</DropdownItem>
                                     <DropdownItem key="oldest"
-                                                  className={cn(data.request.page >= data.pages_count && 'bg-gray-100')}>Oldest</DropdownItem>
+                                                  className={cn(data.request.page >= data.pages_count && 'bg-default-100')}>Oldest</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                             <Tooltip content="Newer">

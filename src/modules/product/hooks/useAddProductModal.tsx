@@ -5,13 +5,14 @@ import TextArea from "@/shared/design-system/form/TextArea.tsx";
 import {useForm} from "react-hook-form";
 import {productCreateSchema, type ProductCreateSchema} from "@/modules/product/schema/product-schema.ts";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {Form} from "@heroui/react";
 import {useCreateProduct} from "@/modules/product/api/useCreateProduct.ts";
 import {setFormError} from "@/shared/utils/error.ts";
 import {toastSuccess} from "@/shared/utils/toast.ts";
 import useCourses from "@/modules/product/api/useCourses.ts";
+import NumberField from "@/shared/design-system/form/NumberField.tsx";
+import Form from "@/shared/design-system/form/Form.tsx";
 
-export default function useCreateProductModal(props?: {
+export default function useAddProductModal(props?: {
     onSuccess?: () => void;
 }) {
 
@@ -27,6 +28,7 @@ export default function useCreateProductModal(props?: {
     // forms
     const title = form.watch('title')
     const summary = form.watch('summary')
+    const price = form.watch('price')
     const type = form.watch('productType')
     const { errors } = form.formState
 
@@ -45,6 +47,7 @@ export default function useCreateProductModal(props?: {
             setFormError({ form, error })
         }
     })
+
 
     // define actions: onSubmit
     const onSubmit = async (data: ProductCreateSchema) => {
@@ -81,6 +84,15 @@ export default function useCreateProductModal(props?: {
                     {...form.register('summary')}
                     isInvalid={!!errors.summary}
                     errorMessage={errors.summary?.message}
+                    isDisabled={createProduct.isLoading}
+                />
+                <NumberField
+                    label={`Initial Price`}
+                    value={price}
+                    description={'Optional. You can add latter.'}
+                    onValueChange={number => form.setValue('price', number)}
+                    isInvalid={!!errors.price}
+                    errorMessage={errors.price?.message}
                     isDisabled={createProduct.isLoading}
                 />
             </Form>
