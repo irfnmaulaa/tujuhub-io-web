@@ -9,11 +9,11 @@ import {useCreatePricing} from "@/modules/pricing/api/useCreatePricing.ts";
 import {useCreatePricingBundle} from "@/modules/pricing/api/useCreatePricingBundle.ts";
 import {setFormError} from "@/shared/utils/error.ts";
 import {toastSuccess} from "@/shared/utils/toast.ts";
-import {useIndividualPricings} from "@/modules/pricing/api/useIndividualPricings.ts";
+import useProducts from "@/modules/product/api/useProducts.ts";
 import NumberField from "@/shared/design-system/form/NumberField.tsx";
 import Form from "@/shared/design-system/form/Form.tsx";
 import {useState, useCallback} from "react";
-import type {PricingItem} from "@/modules/pricing/types/pricing-type.ts";
+import type {ProductItem} from "@/modules/product/types/product-type.ts";
 import MultiSelectAutocomplete, { type Option } from "@/shared/design-system/form/MultiSelectAutocomplete.tsx";
 import { useBundlePricings } from "../api/useBundlePricings";
 
@@ -23,7 +23,7 @@ export default function useCreatePricingBundleModal(props?: {
 
     // define state
     const modal = useModal()
-    const [selectedPricingOptions, setSelectedPricingOptions] = useState<Option[]>([])
+    const [selectedProductOptions, setSelectedProductOptions] = useState<Option[]>([])
     const [searchQuery, setSearchQuery] = useState<string>("")
     // Default currency - easily configurable for future support
     const DEFAULT_CURRENCY = 'IDR'
@@ -38,8 +38,8 @@ export default function useCreatePricingBundleModal(props?: {
 
     // define queries
     const pricingBundles = useBundlePricings()
-    // Fetch all individual pricings by default (empty search to get all items)
-    const individualPricings = useIndividualPricings({ search: searchQuery })
+    // Fetch all products by default (empty search to get all items)
+    const products = useProducts({ search: searchQuery })
 
     // forms
     const title = form.watch('title')
@@ -72,14 +72,14 @@ export default function useCreatePricingBundleModal(props?: {
             const bundleResponse = await createPricing.mutateAsync(bundleData)
             const bundleId = bundleResponse.data?.pricing.id
             
-            // Step 2: Add selected pricing items to the bundle
+            // Step 2: Add selected products to the bundle
             if (!bundleId) {
                 throw new Error('Failed to create bundle')
             }
-            const addPricingPromises = selectedPricingOptions.map(option => 
+            const addPricingPromises = selectedProductOptions.map(option => 
                 createPricingBundle.mutateAsync({
-                    productId: bundleId,
-                    pricingId: option.value
+                    productId: option.value, // productId is from selected product
+                    pricingId: bundleId      // pricingId is the created pricing bundle
                 })
             )
             
@@ -93,7 +93,7 @@ export default function useCreatePricingBundleModal(props?: {
             
             // Reset form and selected items
             form.reset()
-            setSelectedPricingOptions([])
+            setSelectedProductOptions([])
         } catch (error) {
             // Error handling is already done in mutation hooks
             console.error('Error creating bundle:', error)
@@ -128,18 +128,18 @@ export default function useCreatePricingBundleModal(props?: {
                 />
                 
                 {/* Step 2: Bundle Contents - Most Important */}
-                {/* Choose the individual pricing items that will be included in this bundle */}
+                {/* Choose the products that will be included in this bundle */}
                 <MultiSelectAutocomplete
-                    label="Select Product Items to Add to Bundle"
-                    placeholder="Search and select pricing items..."
-                    value={selectedPricingOptions}
-                    onChange={setSelectedPricingOptions}
+                    label="Select Products to Add to Bundle"
+                    placeholder="Search and select products..."
+                    value={selectedProductOptions}
+                    onChange={setSelectedProductOptions}
                     initialOptions={(() => {
-                        const items = individualPricings.data?.items || [];
-                        return items.map((pricing: PricingItem) => ({
-                            value: pricing.id,
-                            label: pricing.title,
-                            description: `${pricing.currency} ${pricing.price?.toLocaleString()} ${pricing.description ? '• ' + pricing.description : ''}`
+                        const items = products.data?.items || [];
+                        return items.map((product: ProductItem) => ({
+                            value: product.id,
+                            label: product.title,
+                            description: `${product.productType} ${product.summary ? '• ' + product.summary : ''}`
                         }));
                     })()}
                     onSearch={useCallback(async (query: string) => { 
@@ -147,19 +147,19 @@ export default function useCreatePricingBundleModal(props?: {
                         setSearchQuery(query);
                         
                         // Return current items (will be updated by the API call)
-                        const items = individualPricings.data?.items || []; 
-                        return items.map((pricing: PricingItem) => ({
-                            value: pricing.id,
-                            label: pricing.title,
-                            description: `${pricing.currency} ${pricing.price?.toLocaleString()} ${pricing.description ? '• ' + pricing.description : ''}`
+                        const items = products.data?.items || []; 
+                        return items.map((product: ProductItem) => ({
+                            value: product.id,
+                            label: product.title,
+                            description: `${product.productType} ${product.summary ? '• ' + product.summary : ''}`
                         }));
-                    }, [individualPricings.data?.items])}
-                    isLoading={individualPricings.isLoading}
+                    }, [products.data?.items])}
+                    isLoading={products.isLoading}
                     isDisabled={createPricing.isLoading || createPricingBundle.isLoading}
                     minSearchLength={0}
                     debounceMs={200}
-                    noOptionsText="No pricing items found"
-                    searchingText="Searching pricing items..."
+                    noOptionsText="No products found"
+                    searchingText="Searching products..."
                 />
                 
                 {/* Step 3: Bundle Pricing */}

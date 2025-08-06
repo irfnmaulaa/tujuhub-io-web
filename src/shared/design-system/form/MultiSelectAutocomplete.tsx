@@ -115,8 +115,7 @@ const MultiSelectAutocomplete: React.FC<MultiSelectAutocompleteProps> = ({
 
     const newValue = [...value, option];
     onChange?.(newValue);
-    setSearchQuery('');
-    setIsOpen(false);
+    inputRef.current?.focus(); // Keep focus on input after selection
   };
 
   // Handle option removal
@@ -175,44 +174,46 @@ const MultiSelectAutocomplete: React.FC<MultiSelectAutocompleteProps> = ({
         />
 
       {/* Search results dropdown */}
-      <div 
-        ref={dropdownRef}
-        className="block w-full mt-1 bg-white border border-default-200 rounded-lg overflow-y-auto resize-y"
-        style={{ maxHeight: '400px' }}
-      >
-        {isSearching || isLoading ? (
-          <div className="flex items-center justify-center p-4 text-default-500">
-            <Spinner size="sm" className="mr-2" />
-            {searchingText}
-          </div>
-        ) : availableOptions.length > 0 ? (
-          <div className="py-1">
-            {availableOptions.map((option) => (
-              <div
-                key={option.value}
-                className="px-3 py-2 cursor-pointer hover:bg-default-100 transition-colors"
-                onClick={() => handleOptionSelect(option)}
-                onMouseDown={(e) => e.preventDefault()} // Prevent input blur
-              >
-                <div className="text-sm font-medium">{option.label}</div>
-                {option.description && (
-                  <div className="text-xs text-default-500 mt-1">
-                    {option.description}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : searchQuery.length >= minSearchLength ? (
-          <div className="p-4 text-center text-default-500 text-sm">
-            {noOptionsText}
-          </div>
-        ) : initialOptions.length === 0 ? (
-          <div className="p-4 text-center text-default-500 text-sm">
-            Type {minSearchLength} or more characters to search
-          </div>
-        ) : null}
-      </div>
+      {isOpen && (
+        <div 
+          ref={dropdownRef}
+          className="block w-full mt-1 bg-white border border-default-200 rounded-lg overflow-y-auto resize-y"
+          style={{ maxHeight: '200px' }}
+        >
+          {isSearching || isLoading ? (
+            <div className="flex items-center justify-center p-4 text-default-500">
+              <Spinner size="sm" className="mr-2" />
+              {searchingText}
+            </div>
+          ) : availableOptions.length > 0 ? (
+            <div className="py-1">
+              {availableOptions.map((option) => (
+                <div
+                  key={option.value}
+                  className="px-3 py-2 cursor-pointer hover:bg-default-100 transition-colors"
+                  onClick={() => handleOptionSelect(option)}
+                  onMouseDown={(e) => e.preventDefault()} // Prevent input blur
+                >
+                  <div className="text-sm font-medium">{option.label}</div>
+                  {option.description && (
+                    <div className="text-xs text-default-500 mt-1">
+                      {option.description}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : searchQuery.length >= minSearchLength ? (
+            <div className="p-4 text-center text-default-500 text-sm">
+              {noOptionsText}
+            </div>
+          ) : initialOptions.length === 0 ? (
+            <div className="p-4 text-center text-default-500 text-sm">
+              Type {minSearchLength} or more characters to search
+            </div>
+          ) : null}
+        </div>
+      )}
 
       {/* Selected items as chips */}
       {value.length > 0 && (

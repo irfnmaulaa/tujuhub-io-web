@@ -24,7 +24,7 @@ import useAddProductModal from "@/modules/product/hooks/useAddProductModal.tsx";
 import useEditProductModal from "@/modules/product/hooks/useEditProductModal.tsx";
 import useDeleteProductModal from "@/modules/product/hooks/useDeleteProductModal.tsx";
 import useBulkProductAction from "@/modules/product/hooks/useBulkProductAction.tsx";
-import Image from "@/shared/design-system/image/Image.tsx";
+import SharedImage from "@/shared/components/image/SharedImage.tsx";
 
 const displayModes = [
     {
@@ -115,6 +115,12 @@ export default function MembershipList() {
                                     isSortable: true,
                                 }, 
                                 {
+                                    key: 'prices',
+                                    label: 'Price(s)',
+                                    size: 1,
+                                    isSortable: false,
+                                },
+                                {
                                     key: 'updatedAt',
                                     label: 'Last Updated',
                                     size: 1,
@@ -136,7 +142,7 @@ export default function MembershipList() {
                                             {/* S: Thumbnail */}
                                             <div>
                                                 <NavLink to={`/${businessId}/memberships/${item.id}/overview`}>
-                                                    <Image
+                                                    <SharedImage
                                                         src={item.thumbnailSrc || ''}
                                                         radius={'lg'}
                                                         className={'aspect-[16/9] h-[60px]'}
@@ -206,6 +212,25 @@ export default function MembershipList() {
                                             </div>
                                             {/* E: Title and Actions */}
 
+                                        </div>
+                                    ),
+                                },
+                                prices: {
+                                    value: (
+                                        <div className={'text-default-500 text-sm pt-0.5'}>
+                                            {item.pricings && item.pricings.length > 0 ? (
+                                                item.pricings.map((pricing, index) => (
+                                                    <div key={pricing.id}>
+                                                        {new Intl.NumberFormat('id-ID', {
+                                                            style: 'currency',
+                                                            currency: pricing.currency || 'IDR',
+                                                            minimumFractionDigits: 0
+                                                        }).format(pricing.price)}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <span className={'text-default-400'}>No pricing</span>
+                                            )}
                                         </div>
                                     ),
                                 },

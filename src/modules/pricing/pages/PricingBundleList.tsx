@@ -14,10 +14,10 @@ import ContentList from "@/shared/layouts/ContentList.tsx";
 import { useEffect, useMemo, useState } from "react";
 import SimpleTable from "@/shared/components/table/SimpleTable.tsx";
 import type { PricingItem } from "@/modules/pricing/types/pricing-type.ts";
-import { Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip } from "@heroui/react";
+import { Checkbox, cn, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip } from "@heroui/react";
 import { NavLink, useParams } from "react-router-dom";
 import useDate from "@/shared/hooks/useDate.ts";
-import Image from "@/shared/design-system/image/Image.tsx";
+import SharedImage from "@/shared/components/image/SharedImage.tsx";
 import useCreatePricingBundleModal from "@/modules/pricing/hooks/useCreatePricingBundleModal.tsx";
 import useEditPricingBundleModal from "@/modules/pricing/hooks/useEditPricingBundleModal.tsx";
 import useDeletePricingModal from "@/modules/pricing/hooks/useDeletePricingModal.tsx";
@@ -74,12 +74,12 @@ export default function PricingBundleList() {
 
     return (
         <BusinessLayout
-            pageTitle={'Pricing Bundles'}
+            pageTitle={'Bundles'}
             menuActive={'pricing-bundle'}
         >
 
             <BusinessPageContent
-                title={'Pricing Bundles'}
+                title={'Bundles'}
                 actions={
                     <Button startContent={<div>
                         <TbPlus className="size-5 me-[-5px]"/>
@@ -104,7 +104,19 @@ export default function PricingBundleList() {
                                     label: 'Bundle',
                                     size: 3,
                                     isSortable: true,
-                                }, 
+                                },
+                                {
+                                    key: 'products',
+                                    label: 'Products',
+                                    size: 2,
+                                    isSortable: false,
+                                },
+                                {
+                                    key: 'price',
+                                    label: 'Price',
+                                    size: 1,
+                                    isSortable: false,
+                                },
                                 {
                                     key: 'updatedAt',
                                     label: 'Last Updated',
@@ -128,12 +140,57 @@ export default function PricingBundleList() {
                                             {/* S: Thumbnail */}
                                             <div>
                                                 <NavLink to={`/${businessId}/pricing-bundles/${item.id}/overview`}>
-                                                    <Image
-                                                        src={''}
-                                                        radius={'lg'}
-                                                        className={'aspect-[16/9] h-[60px]'}
-                                                        fallbackSrc={'/img/placeholder.png'}
-                                                    />
+                                                    {item.bundleProducts && item.bundleProducts.length > 0 ? (
+                                                        <div className="h-[60px] grid gap-0.5">
+                                                            {item.bundleProducts.length === 1 && (
+                                                                <SharedImage
+                                                                    src={item.bundleProducts[0].product?.thumbnailSrc || ''}    
+                                                                    radius={'lg'}
+                                                                    className={'aspect-[16/9] h-[60px]'}
+                                                                />
+                                                            )} 
+                                                            {item.bundleProducts.length > 1 && (
+                                                                <div className="grid grid-cols-2 gap-1 relative aspect-[16/9] h-[60px]">
+                                                                        {item.bundleProducts.slice(0, 3).map((product, idx) => (
+                                                                            <div className="w-full">
+                                                                                <SharedImage
+                                                                                    key={idx}
+                                                                                    src={product.product?.thumbnailSrc || ''}
+                                                                                    radius={'sm'}
+                                                                                    className={'aspect-[16/9] w-full'}
+                                                                                    fallbackSrc={'/img/placeholder.png'}
+                                                                                />
+                                                                            </div>
+                                                                        ))}
+                                                                        {item.bundleProducts.length > 3 ? (
+                                                                            <div className="relative w-full">
+                                                                                <SharedImage
+                                                                                    src={item.bundleProducts[3].product?.thumbnailSrc || ''}
+                                                                                    radius={'sm'}
+                                                                                    className={cn(
+                                                                                        'aspect-[16/9] w-full',
+                                                                                        item.bundleProducts.length > 4 ? 'opacity-50' : ''
+                                                                                    )}
+                                                                                    fallbackSrc={'/img/placeholder.png'}
+                                                                                />
+                                                                                {item.bundleProducts.length > 4 && (
+                                                                                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/30 text-white text-xs font-medium rounded-sm">
+                                                                                        +{item.bundleProducts.length - 4}
+                                                                                    </div>
+                                                                                )}
+                                                                            </div>
+                                                                        ) : null}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <SharedImage
+                                                            src={''}
+                                                            radius={'lg'}
+                                                            className={'aspect-[16/9] h-[60px]'}
+                                                            fallbackSrc={'/img/placeholder.png'}
+                                                        />
+                                                    )}
                                                 </NavLink>
                                             </div>
                                             {/* E: Thumbnail */}
@@ -196,6 +253,52 @@ export default function PricingBundleList() {
                                             </div>
                                             {/* E: Title and Actions */}
 
+                                        </div>
+                                    ),
+                                },
+                                products: {
+                                    value: (
+                                        <Tooltip
+                                            content={
+                                                item.bundleProducts && item.bundleProducts.length > 2 ? (
+                                                    <div className="py-2 px-3">
+                                                        {item.bundleProducts.slice(2).map(product => (
+                                                            <div key={product.product?.id}>{product.product?.title}</div>
+                                                        ))}
+                                                    </div>
+                                                ) : null
+                                            }
+                                            placement="bottom"
+                                        >
+                                            <div className={'text-default-500 text-sm hover:cursor-help'}>
+                                                {item.bundleProducts && item.bundleProducts.length > 0 ? (
+                                                    <>
+                                                        {item.bundleProducts.slice(0, 2).map(product => product.product?.title).join(', ')}
+                                                        {item.bundleProducts.length > 2 && (
+                                                            <span className="text-primary-500">
+                                                                {` and ${item.bundleProducts.length - 2} more ${item.bundleProducts.length - 2 === 1 ? 'product' : 'products'}`}
+                                                            </span>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    'No products'
+                                                )}
+                                            </div>
+                                        </Tooltip>
+                                    )
+                                },
+                                price: {
+                                    value: (
+                                        <div className={'text-default-500 text-sm pt-0.5'}>
+                                            {item.price ? (
+                                                new Intl.NumberFormat('id-ID', {
+                                                    style: 'currency',
+                                                    currency: item.currency || 'IDR',
+                                                    minimumFractionDigits: 0
+                                                }).format(item.price)
+                                            ) : (
+                                                <span className={'text-default-400'}>No pricing</span>
+                                            )}
                                         </div>
                                     ),
                                 },
@@ -265,6 +368,16 @@ export default function PricingBundleList() {
                                 )}
                             </>
                             }
+                            selectAll={<>
+                                <Checkbox
+                                    isSelected={currentPricingBundles.length > 0 && currentPricingBundles.every(course => course.isChecked)}
+                                    onChange={() => {
+                                        setCurrentPricingBundles(prevState => prevState.map(item => ({
+                                            ...item,
+                                            isChecked: selectedPricingBundles.length < currentPricingBundles.length
+                                        })))
+                                    }}/>
+                            </>}
                             isLoading={pricingBundles.isLoading}
                         />
 
