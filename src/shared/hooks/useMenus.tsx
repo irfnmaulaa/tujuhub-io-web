@@ -60,6 +60,7 @@ export type MenuKeys =
     | 'bank-account'
     | 'auth-2fa'
     | 'co-admin'
+    | 'pricing-bundle'
 
 const useMenus = () => {
     
@@ -105,8 +106,8 @@ const useMenus = () => {
                 },
                 {
                     label: 'Bundle',
-                    path: `/${businessId}/bundles`,
-                    menuActive: 'membership',
+                    path: `/${businessId}/pricing-bundles`,
+                    menuActive: 'pricing-bundle',
                     iconOnActive: <TbFiles className="size-6"/>,
                     iconOnInactive: <TbFiles className="size-6"/>,
                 },

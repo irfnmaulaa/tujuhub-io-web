@@ -16,6 +16,8 @@ import Form from "@/shared/design-system/form/Form.tsx";
 import NumberField from "@/shared/design-system/form/NumberField.tsx";
 import useUploadImage from "@/shared/hooks/useUploadImage.tsx";
 import useUploadFile from "@/modules/aws/hooks/useUploadFile.ts";
+import useEvents from "../api/useEvents";
+import useMemberships from "../api/useMemberships";
 
 export default function useEditProductModal(props?: {
     onSuccess?: () => void;
@@ -37,6 +39,8 @@ export default function useEditProductModal(props?: {
 
     // define queries
     const courses = useCourses()
+    const events = useEvents()
+    const memberships = useMemberships()
 
     // forms
     const title = form.watch('title')
@@ -54,6 +58,10 @@ export default function useEditProductModal(props?: {
 
             if(item?.productType === 'course') {
                 await courses.refetch()
+            } else if(item?.productType === 'event') {
+                await events.refetch()
+            } else if(item?.productType === 'membership') {
+                await memberships.refetch()
             }
         },
         onError: (error) => {
@@ -68,7 +76,7 @@ export default function useEditProductModal(props?: {
             if(thumbnailImage.firstFile) {
                 data.thumbnailSrc = await uploadFile.put({
                     file: thumbnailImage.firstFile,
-                })
+                }) 
             }
 
             await updateProduct.mutateAsync({
@@ -88,7 +96,7 @@ export default function useEditProductModal(props?: {
             })
             form.setValue('summary', item.summary || '')
             form.setValue('isPublished', Boolean(item.isPublished))
-            thumbnailImage.setPreview(item.thumbnailSrc || '')
+            if(item.thumbnailSrc) thumbnailImage.setPreview(item.thumbnailSrc)
         }
     }, [item]);
 

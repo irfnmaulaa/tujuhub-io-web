@@ -10,6 +10,7 @@ import {type LoginSchema, loginSchema} from "@/modules/auth/schema/auth-schema.t
 import {useLogin} from "@/modules/auth/api/useLogin.ts";
 import {toastSuccess} from "@/shared/utils/toast.ts";
 import useProfile from "@/modules/profile/api/useProfile.ts";
+import useOauth from "@/modules/auth/api/useOauth.ts";
 
 export default function LoginPage() {
 
@@ -22,6 +23,7 @@ export default function LoginPage() {
         resolver: zodResolver(loginSchema)
     })
     const profile = useProfile()
+    const oauth = useOauth()
 
     // define mutations
     const login = useLogin({
@@ -39,7 +41,7 @@ export default function LoginPage() {
 
     // handle login with google
     const loginWithGoogle = () => {
-
+        oauth.loginWithGoogle()
     }
 
 

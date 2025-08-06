@@ -7,17 +7,17 @@ import type {ProductItem} from "@/modules/product/types/product-type.ts";
 // define output type
 type Output = PaginationResponse<ProductItem[]>
 
-export default function useCourses(opts?: UseQueryOptions<Output>) {
+export default function useMemberships(opts?: UseQueryOptions<Output>) {
 
     const { businessId } = useParams()
     const params = {
-        productType: 'course'
+        productType: 'membership'
     }
     const [query] = useSearchParams()
     const queryString = query.toString()
 
     return useQuery<Output>({
-        queryKey: ['Courses', businessId, queryString],
+        queryKey: ['Products', businessId, queryString],
         queryFn: async () => {
             const response = await Axios.get(`/api/businesses/${businessId}/products?${queryString}`, {
                 params,

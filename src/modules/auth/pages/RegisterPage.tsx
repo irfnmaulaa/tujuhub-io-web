@@ -6,65 +6,83 @@ import {NavLink, useNavigate, useSearchParams} from "react-router-dom";
 import Button from "@/shared/design-system/button/Button.tsx";
 import TextField from "@/shared/design-system/form/TextField.tsx";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {type LoginSchema, loginSchema} from "@/modules/auth/schema/auth-schema.ts";
-import {useLogin} from "@/modules/auth/api/useLogin.ts";
+import {type RegisterSchema, registerSchema} from "@/modules/auth/schema/auth-schema.ts";
+import {useRegister} from "@/modules/auth/api/useRegister.ts";
 import {toastSuccess} from "@/shared/utils/toast.ts";
 import useProfile from "@/modules/profile/api/useProfile.ts";
+import {setFormError} from "@/shared/utils/error.ts";
+import useOauth from "@/modules/auth/api/useOauth.ts";
 
-export default function LoginPage() {
+export default function RegisterPage() {
 
     // define hooks
     const [query] = useSearchParams()
     const navigate = useNavigate()
 
-    // define state
-    const loginForm = useForm<LoginSchema>({
-        resolver: zodResolver(loginSchema)
-    })
+    // define data
     const profile = useProfile()
+    const oauth = useOauth()
+
+    // define state
+    const registerForm = useForm<RegisterSchema>({
+        resolver: zodResolver(registerSchema)
+    })
+    const { errors } = registerForm.formState
 
     // define mutations
-    const login = useLogin({
+    const register = useRegister({
         onSuccess: () => {
             profile.remove()
             toastSuccess('Welcome back!')
             navigate('/')
         },
+        onError: (error) => {
+            setFormError({ form: registerForm, error })
+        }
     })
 
-    // handle login
-    const handleLogin = async (data: LoginSchema) => {
-        await login.mutateAsync(data)
+    // handle register
+    const handleRegister = async (data: RegisterSchema) => {
+        await register.mutateAsync(data)
     }
 
-    // handle login with google
-    const loginWithGoogle = () => {
-
+    // handle register with google
+    const registerWithGoogle = () => {
+        oauth.loginWithGoogle()
     }
 
 
     return (
         <AuthLayout>
 
-            <Form onSubmit={loginForm.handleSubmit(handleLogin)} className="flex flex-col gap-3 w-full">
+            <Form onSubmit={registerForm.handleSubmit(handleRegister)} className="flex flex-col gap-3 w-full">
+                <TextField
+                    type="text"
+                    label="Name"
+                    placeholder="Enter your name"
+                    autoFocus
+                    {...registerForm.register('name')}
+                    isInvalid={!!errors.name}
+                    errorMessage={errors.name?.message}
+                    isDisabled={register.isLoading}
+                />
                 <TextField
                     type="email"
                     label="Email"
-                    placeholder="Enter your email address"
-                    autoFocus
-                    {...loginForm.register('email')}
-                    isInvalid={!!loginForm.formState.errors.email}
-                    errorMessage={loginForm.formState.errors.email?.message}
-                    isDisabled={login.isLoading}
+                    placeholder="Enter email address"
+                    {...registerForm.register('email')}
+                    isInvalid={!!errors.email}
+                    errorMessage={errors.email?.message}
+                    isDisabled={register.isLoading}
                 />
                 <TextField
-                    type="password"
-                    label="Password"
-                    placeholder="Enter your password"
-                    {...loginForm.register('password')}
-                    isInvalid={!!loginForm.formState.errors.password}
-                    errorMessage={loginForm.formState.errors.password?.message}
-                    isDisabled={login.isLoading}
+                    type="tel"
+                    label="Phone"
+                    placeholder="Enter phone number"
+                    {...registerForm.register('phone')}
+                    isInvalid={!!errors.phone}
+                    errorMessage={errors.phone?.message}
+                    isDisabled={register.isLoading}
                 />
                 <div className="flex items-center justify-between w-full">
                     <div></div>
@@ -75,18 +93,18 @@ export default function LoginPage() {
                     </div>
                 </div>
                 <div className="mt-4 w-full">
-                    <Button color={'primary'} size="lg" fullWidth type="submit" isLoading={login.isLoading}>
-                        Login
+                    <Button color={'primary'} size="lg" fullWidth type="submit" isLoading={register.isLoading}>
+                        Register
                     </Button>
                 </div>
                 <div className="grid my-3 grid-cols-[1fr_auto_1fr] w-full items-center gap-4">
                     <Divider/>
-                    <div className="text-gray-500 text-xs">Or login with</div>
+                    <div className="text-gray-500 text-xs">Or register with</div>
                     <Divider/>
                 </div>
                 <div className="w-full">
-                    <Button size="lg" onPress={loginWithGoogle} color={'white'} fullWidth
-                            startContent={<TbBrandGoogle className="size-5"/>} isDisabled={login.isLoading}>
+                    <Button size="lg" onPress={registerWithGoogle} color={'white'} fullWidth
+                            startContent={<TbBrandGoogle className="size-5"/>} isDisabled={register.isLoading}>
                         Google
                     </Button>
                 </div>

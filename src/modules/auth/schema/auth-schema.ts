@@ -11,16 +11,17 @@ export const registerSchema = z.object({
     phone: z.string().min(1, 'This field is required').regex(/^\+?[1-9][0-9]{7,14}$/, 'Invalid phone number'),
 })
 
-export const forgotPasswordSchema = z.object({
+export const requestResetPasswordSchema = z.object({
     email: z.string().email(),
 })
 
 export const resetPasswordSchema = z.object({
-    new_password: z.string(),
-    confirm_new_password: z.string(),
+    token: z.string().min(1, 'This field is required'),
+    newPassword: z.string(),
+    confirmNewPassword: z.string(),
 })
 
 export type LoginSchema = z.infer<typeof loginSchema>
 export type RegisterSchema = z.infer<typeof registerSchema>
-export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>
+export type RequestResetPasswordSchema = z.infer<typeof requestResetPasswordSchema>
 export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>

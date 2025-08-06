@@ -13,7 +13,7 @@ import {
 } from "react-icons/tb";
 import ContentList, {type DisplayMode} from "@/shared/layouts/ContentList.tsx";
 import {useEffect, useMemo, useState} from "react";
-import useCourses from "@/modules/product/api/useCourses.ts";
+import useMemberships from "@/modules/product/api/useMemberships.ts";
 import SimpleTable from "@/shared/components/table/SimpleTable.tsx";
 import type {ProductItem} from "@/modules/product/types/product-type.ts";
 import {CardBody, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from "@heroui/react";
@@ -35,11 +35,11 @@ const displayModes = [
 ]
 
 const sortBy = [
-    {key: 'createdAt-desc', label: 'Newest Courses'},
-    {key: 'createdAt-asc', label: 'Oldest Courses'},
+    {key: 'createdAt-desc', label: 'Newest Memberships'},
+    {key: 'createdAt-asc', label: 'Oldest Memberships'},
 ]
 
-export default function CourseList() {
+export default function MembershipList() {
 
     // define hooks
     const {businessId} = useParams()
@@ -47,10 +47,10 @@ export default function CourseList() {
 
     // define state
     const [mode, setMode] = useState<DisplayMode | null>(displayModes[0])
-    const [currentCourses, setCurrentCourses] = useState<ProductItem[]>([])
+    const [currentMemberships, setCurrentMemberships] = useState<ProductItem[]>([])
 
     // define queries
-    const courses = useCourses()
+    const memberships = useMemberships()
 
     // define mutations
 
@@ -61,34 +61,34 @@ export default function CourseList() {
     const bulkAction = useBulkProductAction()
 
     // define computed
-    const selectedCourses = useMemo(() => {
-        return currentCourses.filter(course => course.isChecked)
-    }, [currentCourses])
+    const selectedMemberships = useMemo(() => {
+        return currentMemberships.filter(membership => membership.isChecked)
+    }, [currentMemberships])
 
     const clearSelected = () => {
-        setCurrentCourses(prevState => prevState.map(course => ({...course, isChecked: false})))
+        setCurrentMemberships(prevState => prevState.map(membership => ({...membership, isChecked: false})))
     }
 
     useEffect(() => {
-        if(courses.data) {
-            setCurrentCourses(courses.data.items)
+        if(memberships.data) {
+            setCurrentMemberships(memberships.data.items)
         }
-    }, [courses.data]);
+    }, [memberships.data]);
 
     useEffect(() => {
         if(createProductModal.form) {
-            createProductModal.form.setValue('productType', 'course')
+            createProductModal.form.setValue('productType', 'membership')
         }
     }, [createProductModal.form]);
 
     return (
         <BusinessLayout
-            pageTitle={'E-Course'}
-            menuActive={'course'}
+            pageTitle={'Memberships'}
+            menuActive={'membership'}
         >
 
             <BusinessPageContent
-                title={'E-Course'}
+                title={'Memberships'}
                 actions={
                     <Button startContent={<div>
                         <TbPlus className="size-5 me-[-5px]"/>
@@ -110,7 +110,7 @@ export default function CourseList() {
                             columns={[
                                 {
                                     key: 'title',
-                                    label: 'Course',
+                                    label: 'Membership',
                                     size: 3,
                                     isSortable: true,
                                 }, 
@@ -121,10 +121,10 @@ export default function CourseList() {
                                     isSortable: true,
                                 },
                             ]}
-                            rows={currentCourses.map((item, i) => ({
+                            rows={currentMemberships.map((item, i) => ({
                                 _checkbox: {
                                     value: (<Checkbox isSelected={Boolean(item.isChecked)}
-                                                      onChange={() => setCurrentCourses(prevState => prevState.map((val, index) => index === i ? {
+                                                      onChange={() => setCurrentMemberships(prevState => prevState.map((val, index) => index === i ? {
                                                           ...val,
                                                           isChecked: !val.isChecked
                                                       } : val))}/>)
@@ -135,7 +135,7 @@ export default function CourseList() {
 
                                             {/* S: Thumbnail */}
                                             <div>
-                                                <NavLink to={`/${businessId}/courses/${item.id}/overview`}>
+                                                <NavLink to={`/${businessId}/memberships/${item.id}/overview`}>
                                                     <Image
                                                         src={item.thumbnailSrc || ''}
                                                         radius={'lg'}
@@ -152,7 +152,7 @@ export default function CourseList() {
                                                 {/* S: Title */}
                                                 <div className={'flex items-center gap-1.5 pt-0.5'}>
                                                     <NavLink
-                                                        to={`/${businessId}/courses/${item.id}/overview`}
+                                                        to={`/${businessId}/memberships/${item.id}/overview`}
                                                         className={'hover:underline line-clamp-1'}>
                                                         {item.title}
 
@@ -215,12 +215,12 @@ export default function CourseList() {
                                 },
                             }))}
                             bulk={<>
-                                {selectedCourses.length > 0 && (
+                                {selectedMemberships.length > 0 && (
                                     <div
                                         className={'border-b border-default px-10 py-4 bg-primary text-foreground flex items-center justify-between gap-8'}>
                                         <div className="flex items-center gap-8">
                                             <div className={'font-light border-r border-white2 pe-8 py-2'}>
-                                                {selectedCourses.length} selected
+                                                {selectedMemberships.length} selected
                                             </div>
                                             <div className={'flex items-center gap-6'}>
                                                 <Dropdown placement={'bottom-start'}>
@@ -238,7 +238,7 @@ export default function CourseList() {
                                                         </Card>
                                                     </DropdownTrigger>
                                                     <DropdownMenu onAction={(action) => bulkAction.action({
-                                                        items: selectedCourses,
+                                                        items: selectedMemberships,
                                                         action
                                                     })}>
                                                         <DropdownItem
@@ -267,15 +267,15 @@ export default function CourseList() {
                             </>}
                             selectAll={<>
                                 <Checkbox
-                                    isSelected={currentCourses.length > 0 && currentCourses.every(course => course.isChecked)}
+                                    isSelected={currentMemberships.length > 0 && currentMemberships.every(membership => membership.isChecked)}
                                     onChange={() => {
-                                        setCurrentCourses(prevState => prevState.map(item => ({
+                                        setCurrentMemberships(prevState => prevState.map(item => ({
                                             ...item,
-                                            isChecked: selectedCourses.length < currentCourses.length
+                                            isChecked: selectedMemberships.length < currentMemberships.length
                                         })))
                                     }}/>
                             </>}
-                            isLoading={courses.isLoading}
+                            isLoading={memberships.isLoading}
                         />
 
                     </div>}
@@ -300,8 +300,8 @@ export default function CourseList() {
                     displayModes={displayModes}
                     activeMode={mode}
                     setActiveMode={(mode) => setMode(mode)}
-                    data={courses.data}
-                    isLoading={courses.isRefetching}
+                    data={memberships.data}
+                    isLoading={memberships.isRefetching}
                 />
 
                 {createProductModal.Element}
