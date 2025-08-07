@@ -134,7 +134,7 @@ const MultiSelectAutocomplete: React.FC<MultiSelectAutocompleteProps> = ({
   };
 
   // Handle input blur
-  const handleInputBlur = (e: React.FocusEvent) => {
+  const handleInputBlur = () => {
     // Delay closing to allow option selection
     setTimeout(() => {
       if (!dropdownRef.current?.contains(document.activeElement)) {

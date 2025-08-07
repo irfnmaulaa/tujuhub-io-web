@@ -87,10 +87,10 @@ export default function useAddProductModal(props?: {
             control={modal}
             header={`Create new ${type}`}
             footer={<>
-                <Button variant={'flat'} color={'default'} onPress={modal.onClose}>
+                <Button size='lg' variant={'flat'} color={'default'} onPress={modal.onClose}>
                     Close
                 </Button>
-                <Button type={'submit'} form={'app-form'} isLoading={createProduct.isLoading}>
+                <Button size='lg' type={'submit'} form={'app-form'} isLoading={createProduct.isLoading}>
                     Create
                 </Button>
             </>}

@@ -137,7 +137,7 @@ export default function MembershipList() {
                                 },
                                 title: {
                                     value: (
-                                        <div className={'flex gap-5'}>
+                                        <div className={'grid grid-cols-[auto_1fr] gap-5'}>
 
                                             {/* S: Thumbnail */}
                                             <div>

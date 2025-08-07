@@ -273,4 +273,8 @@ body::-webkit-scrollbar-thumb {
     filter: brightness(0) invert(1);
 }
 
+form {
+    @apply gap-3.5;
+}
+
 @config "../tailwind.config.js"

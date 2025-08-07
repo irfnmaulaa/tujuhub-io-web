@@ -214,7 +214,7 @@ model Product {
   pricingBundles PricingBundleProduct[]
 
   transactionProducts     TransactionProduct[]
-  Pricing                 Pricing[]
+  pricings                 Pricing[]
   MembershipSubscription  MembershipSubscription[]
   automationExecutionLogs AutomationExecutionLog[] @relation("ProductAutomationExecutionLog")
 
@@ -949,6 +949,9 @@ model LandingPage {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
   businessId String @db.ObjectId
 
+  slug String @unique
+  customDomain String? @unique
+
   title       String
   description String?
   type        LandingPageType @default(default)
@@ -956,6 +959,9 @@ model LandingPage {
   // this automation will be applied on transaction created by the landing page
   automationId String?     @db.ObjectId
   automation   Automation? @relation(fields: [automationId], references: [id])
+
+  isPublished Boolean?    @default(false)
+  isDeleted   Boolean     @default(false)
 
   components          LandingPageComponent[]
   landingPagePricings LandingPagePricing[]

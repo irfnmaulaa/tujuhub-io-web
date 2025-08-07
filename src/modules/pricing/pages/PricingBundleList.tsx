@@ -102,13 +102,13 @@ export default function PricingBundleList() {
                                 {
                                     key: 'name',
                                     label: 'Bundle',
-                                    size: 3,
+                                    size: 2.5,
                                     isSortable: true,
                                 },
                                 {
                                     key: 'products',
                                     label: 'Products',
-                                    size: 2,
+                                    size: 2.5,
                                     isSortable: false,
                                 },
                                 {
@@ -135,7 +135,7 @@ export default function PricingBundleList() {
                                 },
                                 name: {
                                     value: (
-                                        <div className={'flex gap-5'}>
+                                        <div className={'grid grid-cols-[auto_1fr] gap-5'}>
 
                                             {/* S: Thumbnail */}
                                             <div>

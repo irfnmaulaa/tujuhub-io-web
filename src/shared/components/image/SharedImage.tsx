@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Image as HeroUIImage, type ImageProps as HeroUIImageProps } from '@heroui/react';
+import { Image, type ImageProps as HeroUIImageProps } from '@heroui/react';
 import { TbPhoto } from 'react-icons/tb';
 import { cn } from '@heroui/theme';
 
@@ -37,7 +36,7 @@ const SharedImage = ({
     return (
       <div 
         className={cn(
-          'flex items-center justify-center bg-default-100 text-default-400',
+          'flex items-center justify-center bg-default-100 text-default-400 w-full',
           className
         )}
         style={{
@@ -48,17 +47,17 @@ const SharedImage = ({
                       radius === 'full' ? '9999px' : '0.5rem'
         }}
       >
-        <TbPhoto className="size-6" />
+        <TbPhoto className="w-[40%] h-[40%]" />
       </div>
     );
   } 
 
   return (
-    <HeroUIImage
+    <Image
       src={src}
       alt={alt}
       radius={radius}
-      className={className} 
+      className={cn('w-full h-full object-cover', className)} 
       fallbackSrc={fallbackSrc}  
       {...props}
     />

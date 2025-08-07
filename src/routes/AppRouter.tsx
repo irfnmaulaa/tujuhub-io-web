@@ -9,9 +9,11 @@ import CourseList from "@/modules/product/pages/CourseList.tsx";
 import EventList from "@/modules/product/pages/EventList.tsx";
 import MembershipList from "@/modules/product/pages/MembershipList.tsx";
 import PricingBundleList from "@/modules/pricing/pages/PricingBundleList.tsx";
+import LandingPageList from "@/modules/landing-page/pages/LandingPageList.tsx";
 import RegisterPage from "@/modules/auth/pages/RegisterPage.tsx";
 import ForgotPasswordPage from "@/modules/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/modules/auth/pages/ResetPasswordPage";
+import NotFoundPage from "@/shared/pages/fallbacks/NotFoundPage.tsx";
 
 
 const routes = createBrowserRouter([
@@ -46,6 +48,10 @@ const routes = createBrowserRouter([
                     {
                         path: 'pricing-bundles',
                         element: <PricingBundleList/>
+                    },
+                    {
+                        path: 'landing-pages',
+                        element: <LandingPageList/>
                     }
                 ]
             },
@@ -73,6 +79,10 @@ const routes = createBrowserRouter([
             },
         ]
     },
+    {
+        path: '*',
+        element: <NotFoundPage/>
+    }
 ])
 
 export default function AppRouter() {

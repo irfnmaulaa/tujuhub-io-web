@@ -3,28 +3,24 @@ import BusinessPageContent from "@/shared/layouts/BusinessPageContent.tsx";
 import Button from "@/shared/design-system/button/Button.tsx";
 import {
     TbChevronDown,
-    TbDotsVertical,
-    TbFileDots,
-    TbList,
+    TbDotsVertical, TbList,
     TbPencilBolt,
     TbPlus,
-    TbTrash, TbUpload,
-    TbX
+    TbTrash, TbX
 } from "react-icons/tb";
-import ContentList, {type DisplayMode} from "@/shared/layouts/ContentList.tsx";
-import {useEffect, useMemo, useState} from "react";
-import useEvents from "@/modules/product/api/useEvents.ts";
+import ContentList, { type DisplayMode } from "@/shared/layouts/ContentList.tsx";
+import { useEffect, useMemo, useState } from "react";
+import useLandingPages from "@/modules/landing-page/api/useLandingPages.ts";
 import SimpleTable from "@/shared/components/table/SimpleTable.tsx";
-import type {ProductItem} from "@/modules/product/types/product-type.ts";
-import {CardBody, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from "@heroui/react";
-import {NavLink, useParams} from "react-router-dom";
+import type { LandingPageItem } from "@/modules/landing-page/types/landing-page-types.ts";
+import { CardBody, Checkbox, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip } from "@heroui/react";
+import { NavLink, useParams } from "react-router-dom";
 import Card from "@/shared/design-system/card/Card.tsx";
 import useDate from "@/shared/hooks/useDate.ts";
-import useAddProductModal from "@/modules/product/hooks/useAddProductModal.tsx";
-import useEditProductModal from "@/modules/product/hooks/useEditProductModal.tsx";
-import useDeleteProductModal from "@/modules/product/hooks/useDeleteProductModal.tsx";
-import useBulkProductAction from "@/modules/product/hooks/useBulkProductAction.tsx";
-import SharedImage from "@/shared/components/image/SharedImage.tsx";
+import useAddLandingPageModal from "@/modules/landing-page/hooks/useAddLandingPageModal.tsx";
+import useEditLandingPageModal from "@/modules/landing-page/hooks/useEditLandingPageModal.tsx";
+import useDeleteLandingPageModal from "@/modules/landing-page/hooks/useDeleteLandingPageModal.tsx";
+import SharedImage from "@/shared/components/image/SharedImage";
 
 const displayModes = [
     {
@@ -35,122 +31,89 @@ const displayModes = [
 ]
 
 const sortBy = [
-    {key: 'createdAt-desc', label: 'Newest Events'},
-    {key: 'createdAt-asc', label: 'Oldest Events'},
+    {key: 'createdAt-desc', label: 'Newest Landing Pages'},
+    {key: 'createdAt-asc', label: 'Oldest Landing Pages'},
 ]
 
-export default function EventList() {
-
-    // define hooks
-    const {businessId} = useParams()
+export default function LandingPageList() {
     const date = useDate()
+    const [mode, setMode] = useState<DisplayMode>(displayModes[0])
+    const [currentLandingPages, setCurrentLandingPages] = useState<LandingPageItem[]>([])
+    const landingPages = useLandingPages()
+    const addLandingPageModal = useAddLandingPageModal()
+    const editLandingPageModal = useEditLandingPageModal()
+    const deleteLandingPageModal = useDeleteLandingPageModal()
+    const {businessId} = useParams()
 
-    // define state
-    const [mode, setMode] = useState<DisplayMode | null>(displayModes[0])
-    const [currentEvents, setCurrentEvents] = useState<ProductItem[]>([])
-
-    // define queries
-    const events = useEvents()
-
-    // define mutations
-
-    // define modals
-    const createProductModal = useAddProductModal()
-    const editProductModal = useEditProductModal()
-    const deleteProductModal = useDeleteProductModal()
-    const bulkAction = useBulkProductAction()
-
-    // define computed
-    const selectedEvents = useMemo(() => {
-        return currentEvents.filter(event => event.isChecked)
-    }, [currentEvents])
+    const selectedLandingPages = useMemo(() => {
+        return currentLandingPages.filter(landingPage => landingPage.isChecked)
+    }, [currentLandingPages])
 
     const clearSelected = () => {
-        setCurrentEvents(prevState => prevState.map(event => ({...event, isChecked: false})))
+        setCurrentLandingPages(prevState => prevState.map(item => ({
+            ...item,
+            isChecked: false
+        })))
     }
 
     useEffect(() => {
-        if(events.data) {
-            setCurrentEvents(events.data.items)
+        if (landingPages.data?.items) {
+            setCurrentLandingPages(landingPages.data.items.map((landingPage: LandingPageItem) => ({
+                ...landingPage,
+                isChecked: false
+            })))
         }
-    }, [events.data]);
-
-    useEffect(() => {
-        if(createProductModal.form) {
-            createProductModal.form.setValue('productType', 'event')
-        }
-    }, [createProductModal.form]);
+    }, [landingPages.data?.items])
 
     return (
-        <BusinessLayout
-            pageTitle={'Events'}
-            menuActive={'event'}
-        >
-
+        <BusinessLayout pageTitle="Landing Pages" menuActive="landing-page">
             <BusinessPageContent
-                title={'Events'}
+                title={'Landing Pages'} 
                 actions={
-                    <Button startContent={<div>
-                        <TbPlus className="size-5 me-[-5px]"/>
-                    </div>} onPress={() => {
-                        createProductModal.onOpen()
-                    }} radius={'full'} variant={'flat'}>
-                        Create
+                    <Button
+                        key={'add-landing-page'}
+                        startContent={<TbPlus className={'size-5'}/>}
+                        onPress={addLandingPageModal.onOpen}
+                    >
+                        Add Landing Page
                     </Button>
                 }
-            >
+            > 
 
                 <ContentList
                     stickyTop={0}
-                    list={<div>
-
+                    list={<div className={'space-y-6'}>
                         <SimpleTable
                             stickyTop={53}
-                            defaultSortBy={'updatedAt-desc'}
                             columns={[
                                 {
                                     key: 'title',
-                                    label: 'Event',
-                                    size: 3,
-                                    isSortable: true,
+                                    label: 'Title',
+                                    size: 25
                                 }, 
                                 {
-                                    key: 'prices',
-                                    label: 'Price(s)',
-                                    size: 1,
-                                    isSortable: false,
-                                },
+                                    key: 'products',
+                                    label: 'Products',
+                                    size: 30
+                                }, 
                                 {
                                     key: 'updatedAt',
                                     label: 'Last Updated',
-                                    size: 1,
+                                    size: 10,
                                     isSortable: true,
                                 },
                             ]}
-                            rows={currentEvents.map((item, i) => ({
+                            rows={currentLandingPages.map((item, i) => ({
                                 _checkbox: {
                                     value: (<Checkbox isSelected={Boolean(item.isChecked)}
-                                                      onChange={() => setCurrentEvents(prevState => prevState.map((val, index) => index === i ? {
+                                                      onChange={() => setCurrentLandingPages(prevState => prevState.map((val, index) => index === i ? {
                                                           ...val,
                                                           isChecked: !val.isChecked
-                                                      } : val))}/>)
+                                                      } : val))}/>) 
                                 },
                                 title: {
                                     value: (
-                                        <div className={'grid grid-cols-[auto_1fr] gap-5'}>
-
-                                            {/* S: Thumbnail */}
-                                            <div>
-                                                <NavLink to={`/${businessId}/events/${item.id}/overview`}>
-                                                    <SharedImage
-                                                        src={item.thumbnailSrc || ''}
-                                                        radius={'lg'}
-                                                        className={'aspect-[16/9] h-[60px]'}
-                                                        fallbackSrc={'/img/placeholder.png'}
-                                                    />
-                                                </NavLink>
-                                            </div>
-                                            {/* E: Thumbnail */}
+                                        <div className={'min-h-[60px]'}> 
 
                                             {/* S: Title and Actions */}
                                             <div className={'grid grid-rows-[auto_1fr] w-full'}>
@@ -158,7 +121,7 @@ export default function EventList() {
                                                 {/* S: Title */}
                                                 <div className={'flex items-center gap-1.5 pt-0.5'}>
                                                     <NavLink
-                                                        to={`/${businessId}/events/${item.id}/overview`}
+                                                        to={`/${businessId}/courses/${item.id}/overview`}
                                                         className={'hover:underline line-clamp-1'}>
                                                         {item.title}
 
@@ -171,7 +134,7 @@ export default function EventList() {
                                                 <div className={'relative pt-0.5'}>
                                                     <div
                                                         className={'group-hover:hidden text-default-500 text-sm line-clamp-1'}>
-                                                        {item.summary}
+                                                        Test
                                                     </div>
                                                     <div
                                                         className={'absolute left-0 top-0 group-hover:opacity-100 opacity-0 flex items-center gap-1 ms-[-6px]'}>
@@ -179,8 +142,7 @@ export default function EventList() {
                                                             <Button color={'default'} size={'sm'} variant={'light'}
                                                                     className={'rounded-full'} isIconOnly
                                                                     onPress={() => {
-                                                                        editProductModal.setItem(item)
-                                                                        editProductModal.onOpen()
+                                                                        editLandingPageModal.onOpen(item)
                                                                     }}>
                                                                 <TbPencilBolt className={'size-5'}/>
                                                             </Button>
@@ -196,8 +158,8 @@ export default function EventList() {
                                                             </DropdownTrigger>
                                                             <DropdownMenu onAction={async (key) => {
                                                                 if(key === 'move-to-trash') {
-                                                                    deleteProductModal.setItem(item)
-                                                                    deleteProductModal.onOpen()
+                                                                    deleteLandingPageModal.setItem(item)
+                                                                    deleteLandingPageModal.onOpen()
                                                                 }
                                                             }}>
                                                                 <DropdownItem startContent={<TbTrash
@@ -215,21 +177,45 @@ export default function EventList() {
                                         </div>
                                     ),
                                 },
-                                prices: {
+                                type: {
+                                    value: (
+                                        <div className={'text-default-500 text-sm pt-0.5 capitalize'}>
+                                            {item.type || 'default'}
+                                        </div>
+                                    ),
+                                },
+                                products: {
                                     value: (
                                         <div className={'text-default-500 text-sm pt-0.5'}>
-                                            {item.pricings && item.pricings.length > 0 ? (
-                                                item.pricings.map((pricing, index) => (
-                                                    <div key={pricing.id}>
-                                                        {new Intl.NumberFormat('id-ID', {
-                                                            style: 'currency',
-                                                            currency: pricing.currency || 'IDR',
-                                                            minimumFractionDigits: 0
-                                                        }).format(pricing.price)}
-                                                    </div>
-                                                ))
+                                            {item.landingPagePricings && item.landingPagePricings.length > 0 ? (
+                                                <div className={'space-y-1'}>
+                                                    {item.landingPagePricings.slice(0, 3).map((landingPagePricing, index) => (
+                                                        <div key={index} className={'flex items-center gap-2'}>
+                                                            <span className={'text-xs bg-default-100 px-2 py-1 rounded-full'}>
+                                                                {landingPagePricing.pricing.title}
+                                                            </span>
+                                                            <span className={'text-xs text-default-400'}>
+                                                                {landingPagePricing.pricing.currency} {landingPagePricing.pricing.price.toLocaleString()}
+                                                            </span>
+                                                        </div>
+                                                    ))}
+                                                    {item.landingPagePricings.length > 3 && (
+                                                        <div className={'text-xs text-default-400'}>
+                                                            +{item.landingPagePricings.length - 3} more
+                                                        </div>
+                                                    )}
+                                                </div>
                                             ) : (
-                                                <span className={'text-default-400'}>No pricing</span>
+                                                <span className={'text-default-400'}>No products selected</span>
+                                            )}
+                                        </div>
+                                    ),
+                                },
+                                description: {
+                                    value: (
+                                        <div className={'text-default-500 text-sm pt-0.5'}>
+                                            {item.description || (
+                                                <span className={'text-default-400'}>No description</span>
                                             )}
                                         </div>
                                     ),
@@ -240,12 +226,12 @@ export default function EventList() {
                                 },
                             }))}
                             bulk={<>
-                                {selectedEvents.length > 0 && (
+                                {selectedLandingPages.length > 0 && (
                                     <div
                                         className={'border-b border-default px-10 py-4 bg-primary text-foreground flex items-center justify-between gap-8'}>
                                         <div className="flex items-center gap-8">
                                             <div className={'font-light border-r border-white2 pe-8 py-2'}>
-                                                {selectedEvents.length} selected
+                                                {selectedLandingPages.length} selected
                                             </div>
                                             <div className={'flex items-center gap-6'}>
                                                 <Dropdown placement={'bottom-start'}>
@@ -262,17 +248,14 @@ export default function EventList() {
                                                             </CardBody>
                                                         </Card>
                                                     </DropdownTrigger>
-                                                    <DropdownMenu onAction={(action) => bulkAction.action({
-                                                        items: selectedEvents,
-                                                        action
-                                                    })}>
-                                                        <DropdownItem
-                                                            startContent={<TbUpload className={'size-5'}/>}
-                                                            key={'publish'}>Publish</DropdownItem>
-                                                        <DropdownItem
-                                                            startContent={<TbFileDots className={'size-5'}/>}
-                                                            key={'set-draft'} showDivider>Set as
-                                                            Draft</DropdownItem>
+                                                    <DropdownMenu onAction={(action) => {
+                                                        if (action === 'delete') {
+                                                            // Handle bulk delete
+                                                            deleteLandingPageModal.onOpen()
+                                                            deleteLandingPageModal.setTitle(`Delete ${selectedLandingPages.length} Landing Pages`)
+                                                            deleteLandingPageModal.setContent(`Are you sure you want to delete ${selectedLandingPages.length} landing pages? This action cannot be undone.`)
+                                                        }
+                                                    }}>
                                                         <DropdownItem className={'text-red-500'}
                                                                       startContent={<TbTrash
                                                                           className={'size-5'}/>}
@@ -292,31 +275,31 @@ export default function EventList() {
                             </>}
                             selectAll={<>
                                 <Checkbox
-                                    isSelected={currentEvents.length > 0 && currentEvents.every(event => event.isChecked)}
+                                    isSelected={currentLandingPages.length > 0 && currentLandingPages.every(landingPage => landingPage.isChecked)}
                                     onChange={() => {
-                                        setCurrentEvents(prevState => prevState.map(item => ({
+                                        setCurrentLandingPages(prevState => prevState.map(item => ({
                                             ...item,
-                                            isChecked: selectedEvents.length < currentEvents.length
+                                            isChecked: selectedLandingPages.length < currentLandingPages.length
                                         })))
                                     }}/>
                             </>}
-                            isLoading={events.isLoading}
+                            isLoading={landingPages.isLoading}
                         />
 
                     </div>}
                     filters={[
                         {
-                            key: 'isPublished',
-                            label: 'Status',
+                            key: 'type',
+                            label: 'Type',
                             type: 'choices',
                             choices: [
                                 {
-                                    key: '1',
-                                    label: 'Published',
+                                    key: 'default',
+                                    label: 'Default',
                                 },
                                 {
-                                    key: '0',
-                                    label: 'Draft',
+                                    key: 'home',
+                                    label: 'Home',
                                 },
                             ]
                         },
@@ -324,15 +307,14 @@ export default function EventList() {
                     sortBy={sortBy}
                     displayModes={displayModes}
                     activeMode={mode}
-                    setActiveMode={(mode) => setMode(mode)}
-                    data={events.data}
-                    isLoading={events.isRefetching}
+                    setActiveMode={(mode) => setMode(mode as DisplayMode)}
+                    data={landingPages.data}
+                    isLoading={landingPages.isRefetching}
                 />
 
-                {createProductModal.Element}
-                {editProductModal.Element}
-                {deleteProductModal.Element}
-                {bulkAction.Element}
+                {addLandingPageModal.Element}
+                {editLandingPageModal.Element}
+                {deleteLandingPageModal.Element}
 
             </BusinessPageContent>
 
