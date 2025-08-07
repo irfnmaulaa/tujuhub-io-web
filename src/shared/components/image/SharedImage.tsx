@@ -1,6 +1,7 @@
 import { Image, type ImageProps as HeroUIImageProps } from '@heroui/react';
 import { TbPhoto } from 'react-icons/tb';
 import { cn } from '@heroui/theme';
+import type { JSX } from 'react';
 
 interface SharedImageProps extends Omit<HeroUIImageProps, 'radius'> {
   src: string;
@@ -18,6 +19,7 @@ interface SharedImageProps extends Omit<HeroUIImageProps, 'radius'> {
     img?: string;
     blurredImg?: string;
   };
+  fallbackElement?: JSX.Element;
 }
 
 const SharedImage = ({
@@ -26,6 +28,7 @@ const SharedImage = ({
   className,
   radius = 'md',
   fallbackSrc,
+  fallbackElement,
   onError,
   onLoad,
   ...props
@@ -47,7 +50,9 @@ const SharedImage = ({
                       radius === 'full' ? '9999px' : '0.5rem'
         }}
       >
-        <TbPhoto className="w-[40%] h-[40%]" />
+        {fallbackElement || (
+          <TbPhoto className="w-[40%] h-[40%]" />
+        )} 
       </div>
     );
   } 

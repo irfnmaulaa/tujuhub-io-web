@@ -136,7 +136,7 @@ const useMenus = () => {
                 },
                 {
                     label: 'Transaction',
-                    path: `/${businessId}/transactions/completed`,
+                    path: `/${businessId}/transactions`,
                     menuActive: 'transaction',
                     iconOnActive: <TbShoppingCartFilled className="size-6"/>,
                     iconOnInactive: <TbShoppingCart className="size-6"/>,

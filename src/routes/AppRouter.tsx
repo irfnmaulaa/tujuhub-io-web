@@ -14,6 +14,7 @@ import RegisterPage from "@/modules/auth/pages/RegisterPage.tsx";
 import ForgotPasswordPage from "@/modules/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/modules/auth/pages/ResetPasswordPage";
 import NotFoundPage from "@/shared/pages/fallbacks/NotFoundPage.tsx";
+import TransactionList from "@/modules/transaction/pages/TransactionList";
 
 
 const routes = createBrowserRouter([
@@ -44,7 +45,7 @@ const routes = createBrowserRouter([
                     {
                         path: 'memberships',
                         element: <MembershipList/>
-                    },
+                    }, 
                     {
                         path: 'pricing-bundles',
                         element: <PricingBundleList/>
@@ -52,7 +53,11 @@ const routes = createBrowserRouter([
                     {
                         path: 'landing-pages',
                         element: <LandingPageList/>
-                    }
+                    },
+                    {
+                        path: 'transactions',
+                        element: <TransactionList/>
+                    },
                 ]
             },
         ]
