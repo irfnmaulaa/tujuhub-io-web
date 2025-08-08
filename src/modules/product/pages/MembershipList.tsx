@@ -94,7 +94,7 @@ export default function MembershipList() {
                         <TbPlus className="size-5 me-[-5px]"/>
                     </div>} onPress={() => {
                         createProductModal.onOpen()
-                    }} radius={'full'} variant={'flat'}>
+                    }} radius={'full'}>
                         Create
                     </Button>
                 }

@@ -113,7 +113,12 @@ model Business {
 
   name   String
   slug   String @unique
-  domain String @unique
+
+  landingPagePlatformDomain String @unique
+  customLandingPagePlatformDomain String? @unique
+  
+  appPlatformDomain String @unique 
+  customAppPlatformDomain String? @unique
 
   description String?
   logoSrc     String?
@@ -949,12 +954,14 @@ model LandingPage {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
   businessId String @db.ObjectId
 
-  slug String @unique
+  slug String 
   customDomain String? @unique
+  thumbnailSrc String?
 
   title       String
   description String?
   type        LandingPageType @default(default)
+  isMultipleSelection Boolean? @default(false)
 
   // this automation will be applied on transaction created by the landing page
   automationId String?     @db.ObjectId
@@ -1185,6 +1192,12 @@ model Transaction {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   userId String            @db.ObjectId
+
+  // this is for fast checkout
+  tempUserFullName String?
+  tempUserEmail    String?
+  tempUserPhone String?
+
   status TransactionStatus @default(pending)
 
   currency String

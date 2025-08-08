@@ -20,7 +20,6 @@ import useDate from "@/shared/hooks/useDate.ts";
 import useAddLandingPageModal from "@/modules/landing-page/hooks/useAddLandingPageModal.tsx";
 import useEditLandingPageModal from "@/modules/landing-page/hooks/useEditLandingPageModal.tsx";
 import useDeleteLandingPageModal from "@/modules/landing-page/hooks/useDeleteLandingPageModal.tsx";
-import SharedImage from "@/shared/components/image/SharedImage";
 
 const displayModes = [
     {
@@ -72,10 +71,11 @@ export default function LandingPageList() {
                 actions={
                     <Button
                         key={'add-landing-page'}
-                        startContent={<TbPlus className={'size-5'}/>}
+                        startContent={<TbPlus className={'size-5 me-[-5px]'}/>}
                         onPress={addLandingPageModal.onOpen}
+                        radius="full"
                     >
-                        Add Landing Page
+                        Create
                     </Button>
                 }
             > 

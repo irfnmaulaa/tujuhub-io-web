@@ -100,7 +100,7 @@ export default function TransactionList() {
                         <TbPlus className="size-5 me-[-5px]"/>
                     </div>} onPress={() => {
                         createTransactionModal.onOpen()
-                    }} radius={'full'} variant={'flat'}>
+                    }} radius={'full'}>
                         Create
                     </Button>
                 }

@@ -85,7 +85,7 @@ export default function PricingBundleList() {
                         <TbPlus className="size-5 me-[-5px]"/>
                     </div>} onPress={() => {
                         createPricingModal.onOpen()
-                    }} radius={'full'} variant={'flat'}>
+                    }} radius={'full'}>
                         Create
                     </Button>
                 }
